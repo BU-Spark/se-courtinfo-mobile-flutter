@@ -46,7 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   borderSide: BorderSide(color: Colors.grey),
                 ),
                 hintStyle: TextStyle(color: Colors.white),
-                hintText: "Email",
+                hintText: "Username",
                 prefixIcon: Icon(
                   FontAwesomeIcons.mailBulk,
                   color: Colors.white,
@@ -82,6 +82,19 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
+          ),
+          Column(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  child: Text(
+                    "Forgot your password?",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 100),
           Text(
