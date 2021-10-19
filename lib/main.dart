@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scdao_mobile/screens/login_screen.dart';
+import 'package:scdao_mobile/screens/signup_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,8 +23,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: FilteredBackgroundImage(colorFilterColor: Color(0x441F2C5C), image: AssetImage('lib/assets/login_background.png'), child: LoginScreen(),),
+      home: FilteredBackgroundImage(
+        colorFilterColor: Color(0x441F2C5C),
+        image: AssetImage('lib/assets/login_background.png'),
+        child: SignupScreen(),
+      ),
     );
   }
 }
-
