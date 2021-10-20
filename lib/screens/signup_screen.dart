@@ -8,6 +8,18 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final _text = TextEditingController();
+  final _emailtext = TextEditingController();
+  bool _validate = false;
+  bool _emailvalidate = false;
+
+  @override
+  void dispose() {
+    _emailtext.dispose();
+    _text.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +41,10 @@ class _SignupScreenState extends State<SignupScreen> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: TextField(
+              style: TextStyle(color: Colors.white),
+              controller: _text,
               decoration: InputDecoration(
+                errorText: _validate ? 'Username Can\'t Be Empty' : null,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
@@ -45,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 disabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.grey),
                 hintText: "Username",
                 prefixIcon: Icon(
                   FontAwesomeIcons.mailBulk,
@@ -58,7 +73,10 @@ class _SignupScreenState extends State<SignupScreen> {
             padding: const EdgeInsets.all(15.0),
             child: TextField(
               obscureText: true,
+              controller: _emailtext,
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
+                errorText: _emailvalidate ? 'Password Can\'t Be Empty' : null,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
@@ -74,7 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 disabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.grey),
                 hintText: "Password",
                 prefixIcon: Icon(
                   FontAwesomeIcons.userLock,
@@ -105,7 +123,12 @@ class _SignupScreenState extends State<SignupScreen> {
             height: 25.0,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _validate = _text.text.isEmpty;
+                _emailvalidate = _emailtext.text.isEmpty;
+              });
+            },
             child: Text(
               "Log In",
               style: TextStyle(
