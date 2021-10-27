@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scdao_mobile/constants/color_constants.dart';
+import 'package:email_validator/email_validator.dart';
+import 'dart:developer';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -56,7 +58,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 style: TextStyle(color: Colors.white),
                 controller: _emailtext,
                 decoration: InputDecoration(
-                  errorText: _email ? 'Email Can\'t Be Empty' : null,
+                  errorText: _email ? null : 'Incorrect email format',
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -200,10 +202,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 setState(() {
                   _userName = _userNametext.text.isEmpty;
                   _passwordvalidate = _passwordtext.text.isEmpty;
-                  _email = _emailtext.text.isEmpty;
+                  _email = EmailValidator.validate(_emailtext.text);
                   if (_passwordtext.text != _confirmPtext.text)
                     _confirmP = true;
                 });
+                log('$_email');
               },
               child: Text(
                 "Sign Up",
