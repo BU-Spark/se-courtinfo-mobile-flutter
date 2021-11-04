@@ -21,7 +21,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
         height: 30,
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Your Documents',
@@ -39,7 +39,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 )),
           ])),
       Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox(
@@ -65,14 +65,14 @@ class _DocumentScreenState extends State<DocumentScreen> {
           ])),
       SizedBox(height: 55),
       Padding(
-        padding: EdgeInsets.fromLTRB(10, 20, 50, 20),
+        padding: EdgeInsets.fromLTRB(10, 45, 50, 20),
         child: Image(
           image: AssetImage("lib/assets/Documentbackgroundpic.png"),
           height: 225.0,
         ),
       ),
       SizedBox(
-        height: 15,
+        height: 10,
       ),
       Text('Uh oh, you don’t have any documents yet!',
           style: TextStyle(
@@ -82,7 +82,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
             color: blue,
           )),
       SizedBox(
-        height: 15,
+        height: 10,
       ),
       Text('Start scanning some files to get started.',
           style: TextStyle(
@@ -91,42 +91,45 @@ class _DocumentScreenState extends State<DocumentScreen> {
             fontSize: 14,
             color: grey,
           )),
-      Spacer(),
-      Container(
-        decoration: new BoxDecoration(color: Colors.white),
-        height: 70,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              bottom: 15,
-              left: 60,
-              child: Icon(
-                Icons.folder_open,
-                size: 35,
-                color: Color(0xFF1F2C5C),
-              ),
-            ),
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.center,
-                child: Image(
-                  image: AssetImage("lib/assets/Camera.png"),
-                  height: 75.0,
+      Expanded(
+          child: new Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          decoration: new BoxDecoration(color: Colors.white),
+          height: 50,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                bottom: 10,
+                left: 60,
+                child: Icon(
+                  Icons.folder_open,
+                  size: 35,
+                  color: Color(0xFF1F2C5C),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 15,
-              right: 60,
-              child: Icon(
-                Icons.settings,
-                color: grey2,
-                size: 35,
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Image(
+                    image: AssetImage("lib/assets/Camera.png"),
+                    height: 75.0,
+                  ),
+                ),
               ),
-            ),
-          ],
+              Positioned(
+                bottom: 10,
+                right: 60,
+                child: Icon(
+                  Icons.settings,
+                  color: grey2,
+                  size: 35,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+      ))
     ]));
   }
 }
