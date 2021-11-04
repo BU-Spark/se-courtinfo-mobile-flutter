@@ -12,12 +12,13 @@ class _DocumentScreenState extends State<DocumentScreen> {
   final blue = const Color(0xFF1F2C5C);
   final grey = const Color(0xFFB8BFD7);
   final fill = const Color(0xFFF4F6FB);
+  final grey2 = const Color(0xFFB8BFD7);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(children: [
       SizedBox(
-        height: 50,
+        height: 30,
       ),
       Padding(
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -91,9 +92,40 @@ class _DocumentScreenState extends State<DocumentScreen> {
             color: grey,
           )),
       Spacer(),
-      Image(
-        image: AssetImage("lib/assets/Navbar.png"),
-        height: 140.0,
+      Container(
+        decoration: new BoxDecoration(color: Colors.white),
+        height: 70,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              bottom: 15,
+              left: 60,
+              child: Icon(
+                Icons.folder_open,
+                size: 35,
+                color: Color(0xFF1F2C5C),
+              ),
+            ),
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.center,
+                child: Image(
+                  image: AssetImage("lib/assets/Camera.png"),
+                  height: 75.0,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 15,
+              right: 60,
+              child: Icon(
+                Icons.settings,
+                color: grey2,
+                size: 35,
+              ),
+            ),
+          ],
+        ),
       ),
     ]));
   }
