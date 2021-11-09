@@ -2,23 +2,32 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scdao_mobile/constants/color_constants.dart';
+import 'package:email_validator/email_validator.dart';
+import 'dart:developer';
 
-class LoginScreen extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _text = TextEditingController();
+class _SignupScreenState extends State<SignupScreen> {
+  final _userNametext = TextEditingController();
+  final _passwordtext = TextEditingController();
   final _emailtext = TextEditingController();
-  bool _validate = false;
-  bool _emailvalidate = false;
+  final _confirmPtext = TextEditingController();
+  bool _email = false;
+  bool _confirmP = false;
+  bool _userName = false;
+  bool _passwordvalidate = false;
   TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 20.0);
   TextStyle linkStyle = TextStyle(color: Colors.yellow);
+
   @override
   void dispose() {
     _emailtext.dispose();
-    _text.dispose();
+    _confirmPtext.dispose();
+    _passwordtext.dispose();
+    _userNametext.dispose();
     super.dispose();
   }
 
@@ -34,22 +43,53 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 75,
+              height: 50,
             ),
             Image(
               image: AssetImage("lib/assets/scdao-logo.png"),
               height: 125.0,
             ),
             SizedBox(
-              height: 45,
+              height: 15,
             ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextField(
                 style: TextStyle(color: Colors.white),
-                controller: _text,
+                controller: _emailtext,
                 decoration: InputDecoration(
-                  errorText: _validate ? 'Username Can\'t Be Empty' : null,
+                  errorText: _email ? null : 'Incorrect email format',
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueAccent),
+                  ),
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent),
+                  ),
+                  focusedErrorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent),
+                  ),
+                  disabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  hintStyle: TextStyle(color: Colors.grey),
+                  hintText: "Email",
+                  prefixIcon: Icon(
+                    FontAwesomeIcons.mailBulk,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: TextField(
+                style: TextStyle(color: Colors.white),
+                controller: _userNametext,
+                decoration: InputDecoration(
+                  errorText: _userName ? 'Username Can\'t Be Empty' : null,
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -78,10 +118,11 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(15.0),
               child: TextField(
                 obscureText: true,
-                controller: _emailtext,
+                controller: _passwordtext,
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  errorText: _emailvalidate ? 'Password Can\'t Be Empty' : null,
+                  errorText:
+                      _passwordvalidate ? 'Password Can\'t Be Empty' : null,
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -106,31 +147,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    child: Text(
-                      "Forgot your password?",
-                      style: TextStyle(color: Colors.grey),
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: TextField(
+                obscureText: true,
+                controller: _confirmPtext,
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  errorText: _confirmP ? 'Different input Passwords' : null,
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blueAccent),
+                  ),
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent),
+                  ),
+                  focusedErrorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.redAccent),
+                  ),
+                  disabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  hintStyle: TextStyle(color: Colors.grey),
+                  hintText: "Confirm Password",
+                  prefixIcon: Icon(
+                    FontAwesomeIcons.userLock,
+                    color: Colors.white,
                   ),
                 ),
-              ],
+              ),
             ),
-            SizedBox(height: 100),
+            SizedBox(height: 25),
             RichText(
               text: TextSpan(
                 style: defaultStyle,
                 children: <TextSpan>[
-                  TextSpan(text: 'Forgot your password? '),
+                  TextSpan(text: 'Already have an account? '),
                   TextSpan(
-                      text: 'Sign up',
+                      text: 'Login',
                       style: linkStyle,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () =>
-                            {Navigator.of(context).pushNamed('SignupPage')}),
+                            {Navigator.of(context).pushNamed('loginPage')}),
                 ],
               ),
             ),
@@ -140,12 +200,16 @@ class _LoginScreenState extends State<LoginScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  _validate = _text.text.isEmpty;
-                  _emailvalidate = _emailtext.text.isEmpty;
+                  _userName = _userNametext.text.isEmpty;
+                  _passwordvalidate = _passwordtext.text.isEmpty;
+                  _email = EmailValidator.validate(_emailtext.text);
+                  if (_passwordtext.text != _confirmPtext.text)
+                    _confirmP = true;
                 });
+                log('$_email');
               },
               child: Text(
-                "Log In",
+                "Sign Up",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 35.0,
