@@ -15,7 +15,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordtext = TextEditingController();
   final _emailtext = TextEditingController();
   final _confirmPtext = TextEditingController();
-  bool _email = false;
+  bool _email = true;
   bool _confirmP = false;
   bool _userName = false;
   bool _passwordvalidate = false;
@@ -58,7 +58,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 style: TextStyle(color: Colors.white),
                 controller: _emailtext,
                 decoration: InputDecoration(
-                  errorText: _email ? null : 'Incorrect email format',
+                  errorText: _email
+                      ? 'Username Can\'t Be Empty'
+                      : 'Incorrect email format',
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
