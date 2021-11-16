@@ -3,6 +3,7 @@ import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
+import 'package:scdao_mobile/screens/review_screen.dart';
 import 'dart:async';
 
 import 'package:camera/camera.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         'CameraPage': (_) => CameraScreen(
               camera: firstcamera,
             ),
+        'reviewPage': (_) => ReviewScreen(),
       },
     );
   }

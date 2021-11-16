@@ -1,0 +1,84 @@
+
+              child: new Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  decoration: new BoxDecoration(color: Colors.white),
+                  height: 80,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        bottom: 10,
+                        left: 60,
+                        child: Icon(
+                          Icons.folder_open,
+                          size: 35,
+                          color: Color(0xFF1F2C5C),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: GestureDetector(
+                              onTap: () => {
+                                Navigator.of(context).pushNamed('CameraPage')
+                              },
+                              child: Image(
+                                image: AssetImage("lib/assets/Camera.png"),
+                                height: 80.0,
+                              ),
+                            )),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        right: 60,
+                        child: Icon(
+                          Icons.settings,
+                          color: grey2,
+                          size: 35,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+
+
+
+            Container(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 55),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 45, 50, 20),
+                        child: Image(
+                          image: AssetImage(
+                              "lib/assets/Documentbackgroundpic.png"),
+                          height: 225.0,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text('Uh oh, you don’t have any documents yet!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                            fontSize: 17,
+                            color: blue,
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Start scanning some files to get started.',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
