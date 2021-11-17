@@ -123,7 +123,7 @@ class _OverlayClassState extends State<OverlayClass> {
                                     '${filterEntry[index]}',
                                     style: TextStyle(
                                         color: selectedFilter == index
-                                            ? Colors.blue
+                                            ? Color(0xFF6774A6)
                                             : Color(0xFFB8BFD7),
                                         fontSize: 21.0,
                                         fontWeight: FontWeight.w800),
@@ -169,7 +169,7 @@ class _OverlayClassState extends State<OverlayClass> {
                                     '${orderEntry[index]}',
                                     style: TextStyle(
                                         color: selectedOrder == index
-                                            ? Colors.blue
+                                            ? Color(0xFF6774A6)
                                             : Color(0xFFB8BFD7),
                                         fontSize: 21.0,
                                         fontWeight: FontWeight.w800),
@@ -210,7 +210,7 @@ class _OverlayClassState extends State<OverlayClass> {
                                     '${typeEntry[index]}',
                                     style: TextStyle(
                                         color: selectedType == index
-                                            ? Colors.blue
+                                            ? Color(0xFF6774A6)
                                             : Color(0xFFB8BFD7),
                                         fontSize: 21.0,
                                         fontWeight: FontWeight.w800),

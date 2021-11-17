@@ -42,7 +42,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 primary: Color(0xFF1F2C5C),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('reviewPage');
+                Navigator.of(context).pushNamed('DocumentPage');
               },
               child: Text(
                 'Confirm',
