@@ -14,6 +14,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
   final grey = const Color(0xFFB8BFD7);
   final fill = const Color(0xFFF4F6FB);
   final grey2 = const Color(0xFFB8BFD7);
+  final searchController = TextEditingController();
   bool isDescending = false;
   bool isGrid = false;
   bool isContent = true;
@@ -22,13 +23,27 @@ class _DocumentScreenState extends State<DocumentScreen> {
   int _selectedFilter = 0;
   bool isMenuOpen = false;
   List<String> listEntry = <String>[
-    'E Form',
+    'E Doc',
     'B Form',
-    'C Form',
+    'C Paper',
     'D Form',
     'A Form',
-    'F Form'
+    'F Table'
   ];
+  late List<String> searchEntry;
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    searchEntry = listEntry;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     GlobalKey _key = LabeledGlobalKey("button_icon");
@@ -92,6 +107,24 @@ class _DocumentScreenState extends State<DocumentScreen> {
       }
     }
 
+    void searchFiles(String query) {
+      final searchedfiles = searchEntry.where((fileName) {
+        final filesLower = fileName.toLowerCase();
+        final searchLower = query.toLowerCase();
+        return filesLower.contains(searchLower);
+      }).toList();
+      int length = query.length;
+
+      setState(() {
+        if (query.length != 0) {
+          this.listEntry = searchedfiles;
+        } else {
+          this.listEntry = searchEntry;
+        }
+      });
+      log('$listEntry');
+    }
+
     return Scaffold(
       body: ListView(
         shrinkWrap: true,
@@ -123,14 +156,16 @@ class _DocumentScreenState extends State<DocumentScreen> {
                     SizedBox(
                       width: 227,
                       child: TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                          fillColor: fill,
-                          filled: true,
-                          border: InputBorder.none,
-                          prefixIcon: Icon(Icons.search),
-                        ),
-                      ),
+                          controller: searchController,
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            fillColor: fill,
+                            filled: true,
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.search),
+                          ),
+                          onChanged: (searchText) =>
+                              {searchFiles(searchController.text)}),
                     ),
                     GestureDetector(
                       key: _key,
