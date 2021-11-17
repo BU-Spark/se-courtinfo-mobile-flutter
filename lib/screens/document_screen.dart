@@ -14,18 +14,30 @@ class _DocumentScreenState extends State<DocumentScreen> {
   final grey = const Color(0xFFB8BFD7);
   final fill = const Color(0xFFF4F6FB);
   final grey2 = const Color(0xFFB8BFD7);
+  bool isDescending = false;
+  bool isGrid = false;
+  bool isContent = true;
+  int _selectedType = 0;
+  int _selectedOrder = 0;
+  int _selectedFilter = 0;
+  bool isMenuOpen = false;
+  List<String> listEntry = <String>[
+    'E Form',
+    'B Form',
+    'C Form',
+    'D Form',
+    'A Form',
+    'F Form'
+  ];
   @override
   Widget build(BuildContext context) {
     GlobalKey _key = LabeledGlobalKey("button_icon");
     late OverlayEntry _overlayEntry;
     late Size buttonSize;
     late Offset buttonPosition;
-    bool isMenuOpen = false;
     double screenWidth = MediaQuery.of(context).size.width;
-    bool isContent = true;
-    bool isList = true;
     int _selectedIndex = 0;
-    int _selectedType = 50;
+
     findButton() {
       RenderBox renderBox =
           _key.currentContext?.findRenderObject() as RenderBox;
@@ -40,9 +52,19 @@ class _DocumentScreenState extends State<DocumentScreen> {
             top: buttonPosition.dy + buttonSize.height + 20,
             right: screenWidth - buttonPosition.dx - 20,
             width: 320,
-            child: OverlayClass(typeindex: (selectedType) {
-              _selectedType = selectedType;
-            }),
+            child: OverlayClass(
+                typeindex: (selectedType) {
+                  _selectedType = selectedType;
+                },
+                filterindex: (selectedFilter) {
+                  _selectedFilter = selectedFilter;
+                },
+                orderindex: (selectedOrder) {
+                  _selectedOrder = selectedOrder;
+                },
+                selectedFilter: _selectedFilter,
+                selectedOrder: _selectedOrder,
+                selectedType: _selectedType),
           );
         },
       );
@@ -68,7 +90,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
       if (index == 1) {
         Navigator.of(context).pushNamed('CameraPage');
       }
-      log('$_selectedType');
     }
 
     return Scaffold(
@@ -118,12 +139,18 @@ class _DocumentScreenState extends State<DocumentScreen> {
                           {
                             closeMenu(),
                             setState(() {
-                              if (_selectedType == 0) {
-                                isList = true;
+                              if (_selectedType == 1) {
+                                isGrid = true;
                               } else {
-                                isList = false;
+                                isGrid = false;
                               }
-                            })
+                              if (_selectedOrder == 1) {
+                                isDescending = true;
+                              } else {
+                                isDescending = false;
+                              }
+                            }),
+                            log('$isDescending')
                           }
                         else
                           {openMenu()}
@@ -134,45 +161,52 @@ class _DocumentScreenState extends State<DocumentScreen> {
                       ),
                     ),
                   ])),
-          isContent
-              ? (isList ? contentGridView() : contentListView())
-              : Container(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 55),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 45, 50, 20),
-                        child: Image(
-                          image: AssetImage(
-                              "lib/assets/Documentbackgroundpic.png"),
-                          height: 225.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text('Uh oh, you don’t have any documents yet!',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Inter',
-                            fontSize: 17,
-                            color: blue,
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Start scanning some files to get started.',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          color: grey,
-                        ),
-                      ),
-                    ],
-                  ),
+          isGrid
+              ? ContentGrid(
+                  isDescending: isDescending,
+                  listEntry: listEntry,
+                )
+              : ContentList(
+                  isDescending: isDescending,
+                  listEntry: listEntry,
                 ),
+          //  Container(
+          //     child: Column(
+          //       children: [
+          //         SizedBox(height: 55),
+          //         Padding(
+          //           padding: EdgeInsets.fromLTRB(10, 45, 50, 20),
+          //           child: Image(
+          //             image: AssetImage(
+          //                 "lib/assets/Documentbackgroundpic.png"),
+          //             height: 225.0,
+          //           ),
+          //         ),
+          //         SizedBox(
+          //           height: 10,
+          //         ),
+          //         Text('Uh oh, you don’t have any documents yet!',
+          //             style: TextStyle(
+          //               fontWeight: FontWeight.bold,
+          //               fontFamily: 'Inter',
+          //               fontSize: 17,
+          //               color: blue,
+          //             )),
+          //         SizedBox(
+          //           height: 10,
+          //         ),
+          //         Text(
+          //           'Start scanning some files to get started.',
+          //           style: TextStyle(
+          //             fontWeight: FontWeight.bold,
+          //             fontFamily: 'Inter',
+          //             fontSize: 14,
+          //             color: grey,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

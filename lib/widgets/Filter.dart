@@ -3,8 +3,19 @@ import 'package:flutter/material.dart';
 
 class OverlayClass extends StatefulWidget {
   final ValueSetter<int> typeindex;
+  final ValueSetter<int> filterindex;
+  final ValueSetter<int> orderindex;
+  final int selectedFilter;
+  final int selectedOrder;
+  final int selectedType;
 
-  OverlayClass({required this.typeindex});
+  OverlayClass(
+      {required this.typeindex,
+      required this.filterindex,
+      required this.orderindex,
+      required this.selectedFilter,
+      required this.selectedOrder,
+      required this.selectedType});
 
   @override
   _OverlayClassState createState() => _OverlayClassState();
@@ -14,12 +25,16 @@ class _OverlayClassState extends State<OverlayClass> {
   late Size buttonSize;
   late Offset buttonPosition;
   late double screenWidth;
-  int selectedFilter = 50;
-  int selectedOrder = 50;
-  int selectedType = 50;
+  int selectedFilter = 0;
+  int selectedOrder = 0;
+  int selectedType = 0;
+
   @override
   void initState() {
     super.initState();
+    selectedFilter = widget.selectedFilter;
+    selectedType = widget.selectedType;
+    selectedOrder = widget.selectedOrder;
   }
 
   @override
@@ -101,6 +116,7 @@ class _OverlayClassState extends State<OverlayClass> {
                                   onTap: () {
                                     setState(() {
                                       selectedFilter = index;
+                                      widget.filterindex(this.selectedFilter);
                                     });
                                   },
                                   title: Text(
@@ -146,6 +162,7 @@ class _OverlayClassState extends State<OverlayClass> {
                                   onTap: () {
                                     setState(() {
                                       selectedOrder = index;
+                                      widget.orderindex(this.selectedOrder);
                                     });
                                   },
                                   title: Text(
