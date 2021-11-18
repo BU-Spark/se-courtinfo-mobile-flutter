@@ -70,7 +70,7 @@ class DropdownWidget extends StatefulWidget {
 
 /// This is the private State class that goes with DropdownWidget.
 class _DropdownWidgetState extends State<DropdownWidget> {
-  String dropdownValue = 'Oneeeeee';
+  String dropdownValue = 'A Form';
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +91,14 @@ class _DropdownWidgetState extends State<DropdownWidget> {
               dropdownValue = newValue!;
             });
           },
-          items: <String>['Oneeeeee', 'Twooooooo', 'Free', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: <String>[
+            'E Doc',
+            'B Form',
+            'C Paper',
+            'D Form',
+            'A Form',
+            'F Table'
+          ].map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
