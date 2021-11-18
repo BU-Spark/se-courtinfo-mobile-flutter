@@ -4,13 +4,44 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scdao_mobile/constants/color_constants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'dart:developer';
+import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:convert';
+import 'dart:io';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+final signupRepositoryProvider =
+    Provider<SignupRepository>((ref) => SignupRepository());
+
+class SignupRepository {
+  var url = Uri.parse("http://192.168.0.44:8888/api/signup");
+  Future<http.Response> signup(String username, String password) async {
+    Map<String, String> bodyParams = new Map();
+    bodyParams["username"] = username;
+    bodyParams["password"] = password;
+    Map<String, String> headersMap = new Map();
+    headersMap["content-type"] = "application/x-www-form-urlencoded";
+    final http.Response res = await http
+        .post(url, headers: headersMap, body: bodyParams, encoding: Utf8Codec())
+        .then((res) {
+      if (res.statusCode == 200) {
+        print(res.body);
+        return res;
+      } else {
+        print("error");
+        return res;
+      }
+    });
+
+    return res;
+  }
+}
+
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _userNametext = TextEditingController();
   final _passwordtext = TextEditingController();
   final _emailtext = TextEditingController();
@@ -33,6 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    http.Response res;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white.withOpacity(0),
@@ -52,39 +84,39 @@ class _SignupScreenState extends State<SignupScreen> {
             SizedBox(
               height: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                controller: _emailtext,
-                decoration: InputDecoration(
-                  errorText: _email
-                      ? 'Username Can\'t Be Empty'
-                      : 'Incorrect email format',
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  disabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  hintText: "Email",
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.mailBulk,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(15.0),
+            //   child: TextField(
+            //     style: TextStyle(color: Colors.white),
+            //     controller: _emailtext,
+            //     decoration: InputDecoration(
+            //       errorText: _email
+            //           ? 'Username Can\'t Be Empty'
+            //           : 'Incorrect email format',
+            //       enabledBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.white),
+            //       ),
+            //       focusedBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.blueAccent),
+            //       ),
+            //       errorBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.redAccent),
+            //       ),
+            //       focusedErrorBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.redAccent),
+            //       ),
+            //       disabledBorder: UnderlineInputBorder(
+            //         borderSide: BorderSide(color: Colors.grey),
+            //       ),
+            //       hintStyle: TextStyle(color: Colors.grey),
+            //       hintText: "Email",
+            //       prefixIcon: Icon(
+            //         FontAwesomeIcons.mailBulk,
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextField(
@@ -200,15 +232,23 @@ class _SignupScreenState extends State<SignupScreen> {
               height: 25.0,
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
+              onPressed: () async {
+                /*setState(() {
                   _userName = _userNametext.text.isEmpty;
                   _passwordvalidate = _passwordtext.text.isEmpty;
                   _email = EmailValidator.validate(_emailtext.text);
                   if (_passwordtext.text != _confirmPtext.text)
                     _confirmP = true;
                 });
-                log('$_email');
+                log('$_email');*/
+                res = await ref
+                    .read(signupRepositoryProvider)
+                    .signup(_userNametext.text, _passwordtext.text);
+
+                if (res.statusCode == 200) {
+                  Navigator.of(context).pushNamed('loginPage');
+                  print("Yes!!");
+                }
               },
               child: Text(
                 "Sign Up",

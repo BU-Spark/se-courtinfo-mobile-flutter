@@ -5,14 +5,14 @@ import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
 import 'dart:async';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
-  runApp(MyApp(firstcamera: firstCamera));
+  runApp(ProviderScope(child: MyApp(firstcamera: firstCamera)));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DocumentScreen(),
+      home: LoginScreen(),
       routes: {
         'loginPage': (_) => LoginScreen(),
         'SignupPage': (_) => SignupScreen(),
