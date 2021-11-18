@@ -173,10 +173,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             TextButton(
               onPressed: () async {
-                /*setState(() {
+                setState(() {
                   _validate = _text.text.isEmpty;
                   _emailvalidate = _emailtext.text.isEmpty;
-                });*/
+                });
 
                 res = await ref
                     .read(loginRepositoryProvider)

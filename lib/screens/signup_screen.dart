@@ -233,14 +233,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
             TextButton(
               onPressed: () async {
-                /*setState(() {
+                setState(() {
                   _userName = _userNametext.text.isEmpty;
                   _passwordvalidate = _passwordtext.text.isEmpty;
                   _email = EmailValidator.validate(_emailtext.text);
                   if (_passwordtext.text != _confirmPtext.text)
                     _confirmP = true;
                 });
-                log('$_email');*/
+                log('$_email');
                 res = await ref
                     .read(signupRepositoryProvider)
                     .signup(_userNametext.text, _passwordtext.text);
