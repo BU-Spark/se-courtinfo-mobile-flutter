@@ -4,6 +4,7 @@ import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
+import 'package:scdao_mobile/screens/Settings_screen.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginScreen(),
+      home: DocumentScreen(),
       routes: {
         'loginPage': (_) => LoginScreen(),
         'SignupPage': (_) => SignupScreen(),
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
               camera: firstcamera,
             ),
         'reviewPage': (_) => ReviewScreen(),
+        'settingsPage': (_) => SettingsScreen(),
       },
     );
   }

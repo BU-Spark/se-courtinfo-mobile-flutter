@@ -104,6 +104,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
       });
       if (index == 1) {
         Navigator.of(context).pushNamed('CameraPage');
+      } else if (index == 2) {
+        Navigator.of(context).pushNamed('settingsPage');
       }
     }
 
@@ -113,7 +115,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
         final searchLower = query.toLowerCase();
         return filesLower.contains(searchLower);
       }).toList();
-      int length = query.length;
 
       setState(() {
         if (query.length != 0) {
@@ -126,6 +127,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Color(0xFFF4F6FB),
       body: ListView(
         shrinkWrap: true,
         children: [
