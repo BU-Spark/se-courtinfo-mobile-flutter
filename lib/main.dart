@@ -5,6 +5,9 @@ import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
 import 'package:scdao_mobile/screens/Settings_screen.dart';
+import 'package:scdao_mobile/screens/Privacy/privacy_screen.dart';
+import 'package:scdao_mobile/screens/Privacy/change_password.dart';
+import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
             ),
         'reviewPage': (_) => ReviewScreen(),
         'settingsPage': (_) => SettingsScreen(),
+        'privacyPage': (_) => PrivacyScreen(),
+        'UsernamePage': (_) => UsernameScreen(),
+        'PasswordPage': (_) => PasswordScreen(),
       },
     );
   }

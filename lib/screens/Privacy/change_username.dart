@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
-class SettingsScreen extends StatefulWidget {
+class UsernameScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _UsernameState createState() => _UsernameState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _UsernameState extends State<UsernameScreen> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
@@ -25,59 +24,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFF4F6FB),
-        automaticallyImplyLeading: false,
         elevation: 0.0,
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
-        title: Padding(
-          padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
-          child: Text(
-            'Settings',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Inter',
-              fontSize: 28,
-              color: Color(0xFF1F2C5C),
-            ),
-          ),
-        ),
-      ),
-      body: ListView(children: [
-        Container(
-          height: 90,
-          color: Colors.white,
+        title: Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
             child: Text(
-              'Username Here',
+              'Password',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Inter',
-                fontSize: 22,
+                fontSize: 28,
                 color: Color(0xFF1F2C5C),
               ),
             ),
           ),
         ),
-        SizedBox(
-          height: 25,
-        ),
-        GestureDetector(
-          child: Container(
-            height: 50,
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Row(
-                children: [
-                  Image(
-                    image: AssetImage("lib/assets/Privacy.png"),
-                    height: 22.0,
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+            child: Text(
+              'Set',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+                fontSize: 20,
+                color: Color(0xFFB8BFDA),
+              ),
+            ),
+          )
+        ],
+      ),
+      body: ListView(children: [
+        Container(
+          height: 50,
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              children: [
+                Text(
+                  'Current Username',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    color: Color(0xFF1F2C5C),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Privacy',
+                ),
+                Spacer(),
+                Container(
+                  width: 150,
+                  child: Text(
+                    'BlaBlaBla',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',
@@ -85,35 +86,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: Color(0xFF1F2C5C),
                     ),
                   ),
-                  Spacer(),
-                  Image(
-                    image: AssetImage("lib/assets/Arrow.png"),
-                    height: 15.0,
-                  ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
-          onTap: () => {Navigator.of(context).pushNamed('privacyPage')},
         ),
         SizedBox(
           height: 5,
         ),
-        GestureDetector(
-          child: Container(
-            height: 50,
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Row(
-                children: [
-                  Image(
-                    image: AssetImage("lib/assets/Personal.png"),
-                    height: 18.0,
+        Container(
+          height: 50,
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              children: [
+                Text(
+                  'New Username',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                    fontSize: 18,
+                    color: Color(0xFF1F2C5C),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Personal information',
+                ),
+                Spacer(),
+                Container(
+                  width: 150,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                    ),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',
@@ -121,16 +126,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       color: Color(0xFF1F2C5C),
                     ),
                   ),
-                  Spacer(),
-                  Image(
-                    image: AssetImage("lib/assets/Arrow.png"),
-                    height: 15.0,
-                  ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
-          onTap: () => {},
         ),
       ]),
       backgroundColor: Color(0xFFF4F6FB),

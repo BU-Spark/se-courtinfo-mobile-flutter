@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
-class SettingsScreen extends StatefulWidget {
+class PrivacyScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _PrivacyState createState() => _PrivacyState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _PrivacyState extends State<PrivacyScreen> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
@@ -25,44 +24,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFF4F6FB),
-        automaticallyImplyLeading: false,
         elevation: 0.0,
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
-        title: Padding(
-          padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
-          child: Text(
-            'Settings',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Inter',
-              fontSize: 28,
-              color: Color(0xFF1F2C5C),
-            ),
-          ),
-        ),
       ),
       body: ListView(children: [
-        Container(
-          height: 90,
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Text(
-              'Username Here',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-                fontSize: 22,
-                color: Color(0xFF1F2C5C),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 25,
-        ),
         GestureDetector(
           child: Container(
             height: 50,
@@ -71,13 +38,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 children: [
-                  Image(
-                    image: AssetImage("lib/assets/Privacy.png"),
-                    height: 22.0,
-                  ),
-                  SizedBox(width: 10),
                   Text(
-                    'Privacy',
+                    'Change Username',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',
@@ -94,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          onTap: () => {Navigator.of(context).pushNamed('privacyPage')},
+          onTap: () => {Navigator.of(context).pushNamed('UsernamePage')},
         ),
         SizedBox(
           height: 5,
@@ -107,13 +69,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 children: [
-                  Image(
-                    image: AssetImage("lib/assets/Personal.png"),
-                    height: 18.0,
-                  ),
-                  SizedBox(width: 10),
                   Text(
-                    'Personal information',
+                    'Change Password',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',
@@ -130,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-          onTap: () => {},
+          onTap: () => {Navigator.of(context).pushNamed('PasswordPage')},
         ),
       ]),
       backgroundColor: Color(0xFFF4F6FB),
