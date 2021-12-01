@@ -32,7 +32,7 @@ class _UsernameState extends State<UsernameScreen> {
           child: Padding(
             padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
             child: Text(
-              'Password',
+              'Username',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Inter',

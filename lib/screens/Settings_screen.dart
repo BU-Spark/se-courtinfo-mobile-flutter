@@ -10,7 +10,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
-
+    String getInitials(String bank_account_name) => bank_account_name.isNotEmpty
+        ? bank_account_name.trim().split(' ').map((l) => l[0]).take(2).join()
+        : '';
+    String _username = 'Username Here';
+    String initials = getInitials(_username);
     void _onItemTapped(int index) {
       setState(() {
         _selectedIndex = index;
@@ -48,17 +52,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
           height: 90,
           color: Colors.white,
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Text(
-              'Username Here',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-                fontSize: 22,
-                color: Color(0xFF1F2C5C),
-              ),
-            ),
-          ),
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Color(0xFF1F2C5C),
+                    child: Text('$initials'),
+                    radius: 30,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    '$_username',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
+                      fontSize: 22,
+                      color: Color(0xFF1F2C5C),
+                    ),
+                  ),
+                ],
+              )),
         ),
         SizedBox(
           height: 25,
