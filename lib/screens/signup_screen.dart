@@ -245,10 +245,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     .read(signupRepositoryProvider)
                     .signup(_userNametext.text, _passwordtext.text);
 
-                if (res.statusCode == 200) {
-                  Navigator.of(context).pushNamed('loginPage');
-                  print("Yes!!");
-                }
+                Navigator.of(context).pushNamed('loginPage');
+                print("Yes!!");
               },
               child: Text(
                 "Sign Up",
