@@ -1,57 +1,35 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:scdao_mobile/widgets/Filter.dart';
 import 'package:scdao_mobile/widgets/ListGrid.dart';
 import 'dart:developer';
+import 'package:scdao_mobile/riverpod/Provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DocumentScreen extends StatefulWidget {
-  @override
-  _DocumentScreenState createState() => _DocumentScreenState();
-}
-
-class _DocumentScreenState extends State<DocumentScreen> {
-  final blue = const Color(0xFF1F2C5C);
-  final grey = const Color(0xFFB8BFD7);
-  final fill = const Color(0xFFF4F6FB);
-  final grey2 = const Color(0xFFB8BFD7);
+class DocumentScreen extends ConsumerWidget {
   final searchController = TextEditingController();
-  bool isDescending = false;
-  bool isGrid = false;
-  bool isContent = true;
-  int _selectedType = 0;
-  int _selectedOrder = 0;
-  int _selectedFilter = 0;
-  bool isMenuOpen = false;
-  List<String> listEntry = <String>[
-    'E Doc',
-    'B Form',
-    'C Paper',
-    'D Form',
-    'A Form',
-    'F Table'
-  ];
-  late List<String> searchEntry;
-
   @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final blue = const Color(0xFF1F2C5C);
+    final grey = const Color(0xFFB8BFD7);
+    final fill = const Color(0xFFF4F6FB);
+    final grey2 = const Color(0xFFB8BFD7);
+    bool isContent = true;
+    int _selectedType = 0;
+    int _selectedOrder = 0;
+    int _selectedFilter = 0;
+    bool isMenuOpen = false;
 
-  @override
-  void initState() {
-    searchEntry = listEntry;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     GlobalKey _key = LabeledGlobalKey("button_icon");
     late OverlayEntry _overlayEntry;
     late Size buttonSize;
     late Offset buttonPosition;
     double screenWidth = MediaQuery.of(context).size.width;
-    int _selectedIndex = 0;
+    final _selectedIndex = ref.watch(selectedIndex);
+    final String value = ref.watch(helloWorldProvider);
+    final isDescending = ref.watch(is_Descending);
+    final isGrid = ref.watch(is_Grid);
+    final searchEntry = ref.watch(list_Entry);
+    final listEntry = ref.watch(search_Entry);
 
     findButton() {
       RenderBox renderBox =
@@ -99,9 +77,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
     }
 
     void _onItemTapped(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
+      ref.read(selectedIndex.state).state = index;
       if (index == 1) {
         Navigator.of(context).pushNamed('CameraPage');
       } else if (index == 2) {
@@ -115,15 +91,12 @@ class _DocumentScreenState extends State<DocumentScreen> {
         final searchLower = query.toLowerCase();
         return filesLower.contains(searchLower);
       }).toList();
-
-      setState(() {
-        if (query.length != 0) {
-          this.listEntry = searchedfiles;
-        } else {
-          this.listEntry = searchEntry;
-        }
-      });
-      log('$listEntry');
+      if (query.length != 0) {
+        ref.read(search_Entry.state).state = searchedfiles;
+      } else {
+        ref.read(search_Entry.state).state = searchEntry;
+      }
+      log('$searchEntry');
     }
 
     return Scaffold(
@@ -136,7 +109,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Your Documents',
+                    Text(value,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Inter',
@@ -175,18 +148,14 @@ class _DocumentScreenState extends State<DocumentScreen> {
                         if (isMenuOpen)
                           {
                             closeMenu(),
-                            setState(() {
-                              if (_selectedType == 1) {
-                                isGrid = true;
-                              } else {
-                                isGrid = false;
-                              }
-                              if (_selectedOrder == 1) {
-                                isDescending = true;
-                              } else {
-                                isDescending = false;
-                              }
-                            }),
+                            if (_selectedType == 1)
+                              {ref.read(is_Grid.state).state = true}
+                            else
+                              {ref.read(is_Grid.state).state = false},
+                            if (_selectedOrder == 1)
+                              {ref.read(is_Descending.state).state = true}
+                            else
+                              {ref.read(is_Descending.state).state = false},
                             log('$isDescending')
                           }
                         else
@@ -207,43 +176,6 @@ class _DocumentScreenState extends State<DocumentScreen> {
                   isDescending: isDescending,
                   listEntry: listEntry,
                 ),
-          //  Container(
-          //     child: Column(
-          //       children: [
-          //         SizedBox(height: 55),
-          //         Padding(
-          //           padding: EdgeInsets.fromLTRB(10, 45, 50, 20),
-          //           child: Image(
-          //             image: AssetImage(
-          //                 "lib/assets/Documentbackgroundpic.png"),
-          //             height: 225.0,
-          //           ),
-          //         ),
-          //         SizedBox(
-          //           height: 10,
-          //         ),
-          //         Text('Uh oh, you don’t have any documents yet!',
-          //             style: TextStyle(
-          //               fontWeight: FontWeight.bold,
-          //               fontFamily: 'Inter',
-          //               fontSize: 17,
-          //               color: blue,
-          //             )),
-          //         SizedBox(
-          //           height: 10,
-          //         ),
-          //         Text(
-          //           'Start scanning some files to get started.',
-          //           style: TextStyle(
-          //             fontWeight: FontWeight.bold,
-          //             fontFamily: 'Inter',
-          //             fontSize: 14,
-          //             color: grey,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
