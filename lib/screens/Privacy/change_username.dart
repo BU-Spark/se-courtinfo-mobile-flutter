@@ -78,7 +78,7 @@ class _UsernameState extends State<UsernameScreen> {
                 Container(
                   width: 150,
                   child: Text(
-                    'BlaBlaBla',
+                    '',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',

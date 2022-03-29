@@ -10,8 +10,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     int _selectedIndex = 0;
-    String getInitials(String bank_account_name) => bank_account_name.isNotEmpty
-        ? bank_account_name.trim().split(' ').map((l) => l[0]).take(2).join()
+    String getInitials(String account_name) => account_name.isNotEmpty
+        ? account_name.trim().split(' ').map((l) => l[0]).take(2).join()
         : '';
     String _username = 'Username Here';
     String initials = getInitials(_username);

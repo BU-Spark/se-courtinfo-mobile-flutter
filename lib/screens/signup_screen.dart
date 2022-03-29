@@ -84,39 +84,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             SizedBox(
               height: 15,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(15.0),
-            //   child: TextField(
-            //     style: TextStyle(color: Colors.white),
-            //     controller: _emailtext,
-            //     decoration: InputDecoration(
-            //       errorText: _email
-            //           ? 'Username Can\'t Be Empty'
-            //           : 'Incorrect email format',
-            //       enabledBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.white),
-            //       ),
-            //       focusedBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.blueAccent),
-            //       ),
-            //       errorBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.redAccent),
-            //       ),
-            //       focusedErrorBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.redAccent),
-            //       ),
-            //       disabledBorder: UnderlineInputBorder(
-            //         borderSide: BorderSide(color: Colors.grey),
-            //       ),
-            //       hintStyle: TextStyle(color: Colors.grey),
-            //       hintText: "Email",
-            //       prefixIcon: Icon(
-            //         FontAwesomeIcons.mailBulk,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: TextField(
@@ -246,7 +213,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     .signup(_userNametext.text, _passwordtext.text);
 
                 Navigator.of(context).pushNamed('loginPage');
-                print("Yes!!");
               },
               child: Text(
                 "Sign Up",
