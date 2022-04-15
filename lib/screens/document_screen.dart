@@ -203,7 +203,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text('Your Documents',
+            Text('My Documents',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Inter',
