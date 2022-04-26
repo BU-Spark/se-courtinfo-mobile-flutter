@@ -37,7 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 75,
             ),
             Image(
-              image: AssetImage("lib/assets/scdao-logo.png"),
+              image: AssetImage(
+                  "lib/assets/Seal_of_Fairfax_County,_Virginia.svg.png"),
               height: 125.0,
             ),
             SizedBox(
