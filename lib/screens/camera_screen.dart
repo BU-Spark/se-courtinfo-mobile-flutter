@@ -10,7 +10,7 @@ class CameraScreen extends StatefulWidget {
     Key? key,
     required this.camera,
   }) : super(key: key);
-
+  static const String routeName = "/camera";
   final CameraDescription camera;
 
   @override

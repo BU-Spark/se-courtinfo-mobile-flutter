@@ -25,19 +25,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DocumentScreen(),
+      home: LoginScreen(),
       routes: {
-        'loginPage': (_) => LoginScreen(),
-        'SignupPage': (_) => SignupScreen(),
-        'DocumentPage': (_) => DocumentScreen(),
-        'CameraPage': (_) => CameraScreen(
+        LoginScreen.routeName: (_) => LoginScreen(),
+        SignupScreen.routeName: (_) => SignupScreen(),
+        DocumentScreen.routeName: (_) => DocumentScreen(),
+        CameraScreen.routeName: (_) => CameraScreen(
               camera: firstcamera,
             ),
-        'reviewPage': (_) => ReviewScreen(),
-        'settingsPage': (_) => SettingsScreen(),
-        'privacyPage': (_) => PrivacyScreen(),
-        'UsernamePage': (_) => UsernameScreen(),
-        'PasswordPage': (_) => PasswordScreen(),
+        ReviewScreen.routeName: (_) => ReviewScreen(),
+        SettingsScreen.routeName: (_) => SettingsScreen(),
+        PrivacyScreen.routeName: (_) => PrivacyScreen(),
+        UsernameScreen.routeName: (_) => UsernameScreen(),
+        PasswordScreen.routeName: (_) => PasswordScreen(),
       },
     );
   }

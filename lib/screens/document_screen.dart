@@ -5,6 +5,7 @@ import 'package:scdao_mobile/widgets/ListGrid.dart';
 import 'dart:developer';
 
 class DocumentScreen extends StatefulWidget {
+  static const String routeName = "/document";
   @override
   _DocumentScreenState createState() => _DocumentScreenState();
 }

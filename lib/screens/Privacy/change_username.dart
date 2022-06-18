@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UsernameScreen extends StatefulWidget {
+  static const String routeName = "/username";
   @override
   _UsernameState createState() => _UsernameState();
 }

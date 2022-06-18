@@ -8,11 +8,7 @@ class ReturnHttpPost<T> {
 }
 
 class HttpService {
-  final String address = "";
+  final String address = "127.0.0.1/api/v1";
 
   Uri apiAddress(String apiAddr) => Uri.parse(address + apiAddr);
-
-  final Map<String, String> contentType = <String, String>{
-    "form": "application/x-www-form-urlencoded"
-  };
 }
