@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
-import 'package:scdao_mobile/screens/login_screen.dart';
+import 'package:scdao_mobile/screens/login2_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
@@ -14,9 +14,9 @@ import 'package:camera/camera.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  runApp(ProviderScope(child: MyApp(firstcamera: firstCamera)));
+  // final cameras = await availableCameras();
+  // final firstCamera = cameras.first;
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: LoginScreen(),
       routes: {
         LoginScreen.routeName: (_) => LoginScreen(),
