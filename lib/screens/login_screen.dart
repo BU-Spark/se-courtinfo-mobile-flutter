@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/services/user.dart';
@@ -29,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     _pwdController.dispose();
   }
 
-  void _onLogin() async {
+  void _onLogin(UserProvider userProv) async {
     try {
       setState(() {
         _isError = false;
@@ -48,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = false;
       });
       if (user != null) {
+        userProv.setUser(user);
         Navigator.of(context).pushNamed(DocumentScreen.routeName);
       } else {
         setState(() {
@@ -66,6 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+
     return AuthScreen(
       inputFields: Padding(
         padding: const EdgeInsets.only(top: 80.0, left: 40.0, right: 40.0),
@@ -125,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       button: TextButton(
-        onPressed: _onLogin,
+        onPressed: () => _onLogin(userProvider),
         child: _isLoading
             ? CircularProgressIndicator(
                 color: Colors.white,

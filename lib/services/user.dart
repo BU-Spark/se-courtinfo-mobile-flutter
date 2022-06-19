@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/user.dart';
 
 class UserService extends HttpService {
-  Future<User?> login(String username, String password) async {
+  Future<UserModel?> login(String username, String password) async {
     Map<String, String> formParams = <String, String>{
       "username": username,
       "password": password
@@ -18,7 +18,8 @@ class UserService extends HttpService {
       final http.Response res =
           await http.post(uri, headers: headers, body: formParams);
       if (res.statusCode == 200) {
-        return User.build(username, jsonDecode(res.body));
+        // TODO: add logic for caching access_token
+        return UserModel.build(username, jsonDecode(res.body));
       } else if (res.statusCode > 200) {
         print("Wrong status code: ${res.statusCode}");
         print("body: ${res.body}");
@@ -29,7 +30,7 @@ class UserService extends HttpService {
     return null;
   }
 
-  Future<User?> signUp(String username, String password) async {
+  Future<UserModel?> signUp(String username, String password) async {
     Map<String, String> formParams = <String, String>{
       "username": username,
       "password": password
@@ -45,7 +46,7 @@ class UserService extends HttpService {
       body: formParams,
     );
     if (res.statusCode == 200) {
-      return User.build(username, jsonDecode(res.body));
+      return UserModel.build(username, jsonDecode(res.body));
     } else if (res.statusCode > 200) {
       print("Wrong status code: ${res.statusCode}");
       print("body: ${res.body}");

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
@@ -9,14 +11,18 @@ import 'package:scdao_mobile/screens/Privacy/privacy_screen.dart';
 import 'package:scdao_mobile/screens/Privacy/change_password.dart';
 import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final cameras = await availableCameras();
   // final firstCamera = cameras.first;
-  runApp(ProviderScope(child: MyApp()));
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

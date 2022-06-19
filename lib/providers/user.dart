@@ -1,16 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import '../models/user.dart';
 
-class UserProviders extends ChangeNotifier {
-  User _user = User(username: '');
+class UserProvider extends ChangeNotifier {
+  UserModel _user = UserModel(username: '');
 
-  User get user => _user;
+  UserModel get user => _user;
 
-  void setUser(String user, String token) {
-    _user = User.build(user, jsonDecode(token));
+  void setUserFromJson(String username, TokenModel token) {
+    _user = UserModel.build(username, token);
+    notifyListeners();
+  }
+
+  void setUser(UserModel user) {
+    _user = user;
     notifyListeners();
   }
 }
