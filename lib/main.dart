@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
-import 'package:scdao_mobile/screens/login2_screen.dart';
+import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
