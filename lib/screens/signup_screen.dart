@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'dart:io';
 
 class SignupScreen extends ConsumerStatefulWidget {
+  static const String routeName = "/signup";
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }

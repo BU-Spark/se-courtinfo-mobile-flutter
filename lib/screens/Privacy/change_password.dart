@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PasswordScreen extends StatefulWidget {
+  static const String routeName = "/password";
   @override
   _PasswordState createState() => _PasswordState();
 }

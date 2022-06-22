@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
 class SettingsScreen extends StatefulWidget {
+  static const String routeName = "/settings";
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }

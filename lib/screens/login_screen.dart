@@ -1,240 +1,175 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:scdao_mobile/constants/color_constants.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
-import 'dart:io';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
+import 'package:scdao_mobile/screens/document_screen.dart';
+import 'package:scdao_mobile/screens/signup_screen.dart';
+import 'package:scdao_mobile/services/user.dart';
+import 'package:scdao_mobile/widgets/AuthScreen.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+  static const routeName = "/login";
+
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-final loginRepositoryProvider =
-    Provider<LoginRepository>((ref) => LoginRepository());
+class _LoginScreenState extends State<LoginScreen> {
+  final _usernameController = TextEditingController();
+  final _pwdController = TextEditingController();
+  UserService userService = UserService();
 
-class LoginRepository {
-  var url = Uri.parse("http://192.168.0.44:8888/api/token");
-  Future<http.Response> login(String username, String password) async {
-    Map<String, String> bodyParams = new Map();
-    bodyParams["username"] = username;
-    bodyParams["password"] = password;
-    Map<String, String> headersMap = new Map();
-    headersMap["content-type"] = "application/x-www-form-urlencoded";
+  String _errorMsg = "";
+  bool _isError = false;
+  bool _isLoading = false;
 
-    final http.Response res = await http
-        .post(url, headers: headersMap, body: bodyParams, encoding: Utf8Codec())
-        .then((res) {
-      if (res.statusCode == 200) {
-        print(res.body);
-        return res;
-      } else {
-        print("error");
-        return res;
-      }
-    });
-
-    return res;
-  }
-}
-
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _text = TextEditingController();
-  final _emailtext = TextEditingController();
-  bool _validate = false;
-  bool _emailvalidate = false;
-  TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 20.0);
-  TextStyle linkStyle = TextStyle(color: Colors.yellow);
   @override
   void dispose() {
-    _emailtext.dispose();
-    _text.dispose();
     super.dispose();
+    _usernameController.dispose();
+    _pwdController.dispose();
+  }
+
+  void _onLogin(UserProvider userProv) async {
+    try {
+      setState(() {
+        _isError = false;
+        _isLoading = true;
+      });
+
+      // TODO: Delete before production
+      // For testing loading flow
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      var user = await userService.login(
+        _usernameController.text,
+        _pwdController.text,
+      );
+      setState(() {
+        _isLoading = false;
+      });
+      if (user != null) {
+        userProv.setUser(user);
+        Navigator.of(context).pushNamed(DocumentScreen.routeName);
+      } else {
+        setState(() {
+          _errorMsg = "User is not found!";
+          _isError = true;
+        });
+      }
+    } on Exception catch (e) {
+      print(e);
+      setState(() {
+        _errorMsg = "There is an error, please try again later!";
+        _isError = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    http.Response res;
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white.withOpacity(0),
-      body: FilteredBackgroundImage(
-        colorFilterColor: Color(0x441F2C5C),
-        image: AssetImage('lib/assets/login_background.png'),
+    return AuthScreen(
+      inputFields: Padding(
+        padding: const EdgeInsets.only(top: 80.0, left: 40.0, right: 40.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 75,
-            ),
-            Image(
-              image: AssetImage("lib/assets/scdao-logo.png"),
-              height: 125.0,
-            ),
-            SizedBox(
-              height: 45,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: TextField(
-                style: TextStyle(color: Colors.white),
-                controller: _text,
-                decoration: InputDecoration(
-                  errorText: _validate ? 'Username Can\'t Be Empty' : null,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  disabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  hintText: "Username",
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.mailBulk,
-                    color: Colors.white,
-                  ),
+            if (_isError)
+              Text(
+                _errorMsg,
+                style: TextStyle(color: Colors.red),
+              ),
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.account_circle,
+                  color: Colors.white,
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: TextField(
-                obscureText: true,
-                controller: _emailtext,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  errorText: _emailvalidate ? 'Password Can\'t Be Empty' : null,
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent),
-                  ),
-                  errorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                  ),
-                  disabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey),
-                  hintText: "Password",
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.userLock,
-                    color: Colors.white,
-                  ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(width: 3.0, color: Colors.white),
                 ),
+                labelText: "Username",
+                labelStyle: TextStyle(color: Colors.white),
               ),
+              style: TextStyle(color: Colors.white),
             ),
-            Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    child: Text(
-                      "Forgot your password?",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
+            TextField(
+              controller: _pwdController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.lock,
+                  color: Colors.white,
                 ),
-              ],
-            ),
-            SizedBox(height: 100),
-            RichText(
-              text: TextSpan(
-                style: defaultStyle,
-                children: <TextSpan>[
-                  TextSpan(text: 'Forgot your password? '),
-                  TextSpan(
-                      text: 'Sign up',
-                      style: linkStyle,
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () =>
-                            {Navigator.of(context).pushNamed('SignupPage')}),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 25.0,
-            ),
-            TextButton(
-              onPressed: () async {
-                setState(() {
-                  _validate = _text.text.isEmpty;
-                  _emailvalidate = _emailtext.text.isEmpty;
-                });
-
-                res = await ref
-                    .read(loginRepositoryProvider)
-                    .login(_text.text, _emailtext.text);
-
-                Navigator.of(context).pushNamed('DocumentPage');
-                print("Yes!!");
-              },
-              child: Text(
-                "Log In",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.w600),
-              ),
-              style: ButtonStyle(
-                fixedSize: MaterialStateProperty.all(Size.fromWidth(320)),
-                backgroundColor: MaterialStateProperty.all(kscdaoYellow),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(width: 3.0, color: Colors.white),
                 ),
+                labelText: "Password",
+                labelStyle: TextStyle(color: Colors.white),
               ),
+              style: TextStyle(color: Colors.white),
             ),
-            SizedBox(
-              height: 100.0,
+            const SizedBox(height: 10.0),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: RichText(
+                textAlign: TextAlign.end,
+                text: TextSpan(
+                    text: "Forgot your password?",
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print("Click forgot your password text");
+                      },
+                    style: TextStyle(color: Colors.white.withOpacity(0.6))),
+              ),
             )
           ],
         ),
       ),
-    );
-  }
-}
-
-class FilteredBackgroundImage extends StatelessWidget {
-  FilteredBackgroundImage(
-      {required this.image,
-      required this.colorFilterColor,
-      required this.child});
-
-  final AssetImage image;
-  final Color colorFilterColor;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: child,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.fitWidth,
-          colorFilter: ColorFilter.mode(colorFilterColor, BlendMode.dstATop),
-          image: image,
+      button: TextButton(
+        onPressed: () => _onLogin(userProvider),
+        child: _isLoading
+            ? CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : Text(
+                "Log In",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+        style: ButtonStyle(
+          fixedSize: MaterialStateProperty.all(Size.fromWidth(320)),
+          backgroundColor: _isLoading
+              ? MaterialStateProperty.all(Colors.grey)
+              : MaterialStateProperty.all(Color(0xFFFFC032)),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
         ),
       ),
+      navTextSpan: <TextSpan>[
+        TextSpan(text: "Don't have an account? "),
+        TextSpan(
+          text: "Sign up",
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              Navigator.of(context).pushNamed(SignupScreen.routeName);
+              print("clicked sign up text!");
+            },
+          style: TextStyle(
+            color: Color.fromRGBO(255, 192, 50, 1),
+          ),
+        ),
+      ],
     );
   }
 }

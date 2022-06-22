@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ReviewScreen extends StatefulWidget {
+  static const String routeName = "/review";
   @override
   _ReviewScreenState createState() => _ReviewScreenState();
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PrivacyScreen extends StatefulWidget {
+  static const String routeName = "/privacy";
   @override
   _PrivacyState createState() => _PrivacyState();
 }

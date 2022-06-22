@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
@@ -9,14 +11,18 @@ import 'package:scdao_mobile/screens/Privacy/privacy_screen.dart';
 import 'package:scdao_mobile/screens/Privacy/change_password.dart';
 import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-  runApp(ProviderScope(child: MyApp(firstcamera: firstCamera)));
+  // final cameras = await availableCameras();
+  // final firstCamera = cameras.first;
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,19 +31,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DocumentScreen(),
+      debugShowCheckedModeBanner: false,
+      home: LoginScreen(),
       routes: {
-        'loginPage': (_) => LoginScreen(),
-        'SignupPage': (_) => SignupScreen(),
-        'DocumentPage': (_) => DocumentScreen(),
-        'CameraPage': (_) => CameraScreen(
+        LoginScreen.routeName: (_) => LoginScreen(),
+        SignupScreen.routeName: (_) => SignupScreen(),
+        DocumentScreen.routeName: (_) => DocumentScreen(),
+        CameraScreen.routeName: (_) => CameraScreen(
               camera: firstcamera,
             ),
-        'reviewPage': (_) => ReviewScreen(),
-        'settingsPage': (_) => SettingsScreen(),
-        'privacyPage': (_) => PrivacyScreen(),
-        'UsernamePage': (_) => UsernameScreen(),
-        'PasswordPage': (_) => PasswordScreen(),
+        ReviewScreen.routeName: (_) => ReviewScreen(),
+        SettingsScreen.routeName: (_) => SettingsScreen(),
+        PrivacyScreen.routeName: (_) => PrivacyScreen(),
+        UsernameScreen.routeName: (_) => UsernameScreen(),
+        PasswordScreen.routeName: (_) => PasswordScreen(),
       },
     );
   }
