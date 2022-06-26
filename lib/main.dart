@@ -11,12 +11,9 @@ import 'package:scdao_mobile/screens/Privacy/privacy_screen.dart';
 import 'package:scdao_mobile/screens/Privacy/change_password.dart';
 import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'dart:async';
-import 'package:camera/camera.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final cameras = await availableCameras();
-  // final firstCamera = cameras.first;
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
