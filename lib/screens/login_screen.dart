@@ -70,10 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      // TODO: Delete before production
-      // For testing loading flow
-      await Future.delayed(const Duration(milliseconds: 1000));
-
       var user = await userService.login(
         _usernameController.text,
         _pwdController.text,
@@ -89,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
           _errorUserMsg = "User is not found!";
         });
       }
-    } on Exception catch (e) {
-      print(e);
+    } on Exception catch (e, s) {
       setState(() {
         _errorUserMsg = "There is an error, please try again later!";
+        _isLoading = false;
       });
     }
   }

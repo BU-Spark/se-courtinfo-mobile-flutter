@@ -8,7 +8,7 @@ class ReturnHttpPost<T> {
 }
 
 class HttpService {
-  final String address = "127.0.0.1/api";
+  final String address = "http://127.0.0.1/api";
 
   Uri apiAddress(String apiAddr) => Uri.parse(address + apiAddr);
 }
