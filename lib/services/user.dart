@@ -52,11 +52,17 @@ class UserService extends HttpService {
       body: formParams,
     );
     if (res.statusCode == 200) {
-      return UserModel.build(username, jsonDecode(res.body));
+      return UserModel.build(
+        username,
+        TokenModel.fromJson(jsonDecode((res.body))),
+      );
     } else if (res.statusCode > 200) {
       print("Wrong status code: ${res.statusCode}");
       print("body: ${res.body}");
     }
     return null;
   }
+
+  // TODO: create check token service in the backend
+  Future<UserModel?> checkToken(TokenModel token) async {}
 }
