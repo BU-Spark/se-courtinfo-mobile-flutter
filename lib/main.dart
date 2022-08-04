@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scdao_mobile/models/user.dart';
 import 'package:scdao_mobile/providers/user.dart';
+import 'package:scdao_mobile/screens/new_document_screen.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
@@ -23,19 +24,22 @@ Future<void> main() async {
     ],
     child: new FutureBuilder(
       future: SharedPreferences.getInstance(),
-      builder: ((context, AsyncSnapshot<SharedPreferences> snapshot) =>
-          snapshot.hasData
-              ? MyApp(
-                  prefs: snapshot.data!,
-                )
-              : LoadingScreen()),
+      builder: ((context, AsyncSnapshot<SharedPreferences> snapshot) {
+        print(snapshot);
+        switch (snapshot.connectionState) {
+          case ConnectionState.active:
+            return MyApp(prefs: snapshot.data);
+          default:
+            return LoadingScreen();
+        }
+      }),
     ),
   ));
 }
 
 class MyApp extends StatefulWidget {
-  final SharedPreferences prefs;
-  MyApp({Key? key, required this.prefs}) : super(key: key);
+  final SharedPreferences? prefs;
+  MyApp({Key? key, this.prefs}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -47,14 +51,15 @@ class _MyAppState extends State<MyApp> {
   // get token from cache and sends it to backend to check
   // if it's still valid or not
   Future<void> checkCachedToken(UserProvider provider) async {
-    final token = TokenModel.getTokenFromCache(widget.prefs);
+    if (widget.prefs == null) return;
+    final token = TokenModel.getTokenFromCache(widget.prefs!);
     if (token != null) {
       final user = await userService.checkToken(token);
       if (user != null) {
         provider.setUser(user);
       }
     } else {
-      await widget.prefs.clear();
+      await widget.prefs!.clear();
     }
   }
 
@@ -69,7 +74,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(prefs: widget.prefs),
+      home: NewDocumentScreen(),
       routes: {
         LoginScreen.routeName: (_) => LoginScreen(
               prefs: widget.prefs,

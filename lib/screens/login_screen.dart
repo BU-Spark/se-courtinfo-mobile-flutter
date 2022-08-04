@@ -5,12 +5,12 @@ import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/services/user.dart';
-import 'package:scdao_mobile/widgets/AuthScreen.dart';
+import 'package:scdao_mobile/widgets/auth_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  final SharedPreferences prefs;
-  const LoginScreen({Key? key, required this.prefs}) : super(key: key);
+  final SharedPreferences? prefs;
+  const LoginScreen({Key? key, this.prefs}) : super(key: key);
   static const routeName = "/login";
 
   @override
@@ -83,8 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // set the returned token into cache
       if (user != null) {
         userProv.setUser(user);
-        if (user.token != null) {
-          await user.token!.setTokenToCache(widget.prefs);
+        if (user.token != null && widget.prefs != null) {
+          await user.token!.setTokenToCache(widget.prefs!);
         }
         // navigate to document screen after login successfully
         Navigator.of(context).pushNamed(DocumentScreen.routeName);
