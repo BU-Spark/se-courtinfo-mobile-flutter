@@ -11,8 +11,9 @@ class NewDocumentScreen extends StatefulWidget {
 
 class _NewDocumentScreenState extends State<NewDocumentScreen> {
   final _searchController = TextEditingController();
-  void _navOnPressed(String id) {}
-  final List<String> testArr = [
+  bool isDescendingOrder = false;
+  List<String> displayDocuments = [];
+  List<String> documents = [
     "bye",
     "yeet",
     "sheeeesh",
@@ -20,6 +21,37 @@ class _NewDocumentScreenState extends State<NewDocumentScreen> {
     "ayy",
     "hello",
   ];
+
+  void _reorderDocumentsList() {
+    setState(() {
+      isDescendingOrder = !isDescendingOrder;
+      if (!isDescendingOrder) {
+        displayDocuments.sort((a, b) => b.compareTo(a));
+      } else {
+        displayDocuments.sort((a, b) => a.compareTo(b));
+      }
+    });
+  }
+
+  void _navOnPressed(String id) {}
+
+  @override
+  void initState() {
+    displayDocuments = List.from(documents);
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        displayDocuments = documents
+            .where((doc) => doc.contains(_searchController.text))
+            .toList();
+        if (!isDescendingOrder) {
+          displayDocuments.sort((a, b) => b.compareTo(a));
+        } else {
+          displayDocuments.sort((a, b) => a.compareTo(b));
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +139,7 @@ class _NewDocumentScreenState extends State<NewDocumentScreen> {
                       ),
                       IconButton(
                         splashRadius: 1.0,
-                        onPressed: () => {print("Pressed open filter")},
+                        onPressed: _reorderDocumentsList,
                         icon: Icon(
                           Icons.menu,
                           size: 28.0,
@@ -123,7 +155,7 @@ class _NewDocumentScreenState extends State<NewDocumentScreen> {
             Expanded(
               flex: 5,
               child: DocumentsListView(
-                docArray: testArr,
+                documentsList: displayDocuments,
                 heightPadding: heightPadding,
                 widthPadding: widthPadding,
                 isDescending: true,
