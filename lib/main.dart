@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scdao_mobile/models/user.dart';
 import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/new_document_screen.dart';
@@ -14,10 +16,10 @@ import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'package:scdao_mobile/services/user.dart';
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
@@ -25,9 +27,8 @@ Future<void> main() async {
     child: new FutureBuilder(
       future: SharedPreferences.getInstance(),
       builder: ((context, AsyncSnapshot<SharedPreferences> snapshot) {
-        print(snapshot);
         switch (snapshot.connectionState) {
-          case ConnectionState.active:
+          case ConnectionState.done:
             return MyApp(prefs: snapshot.data);
           default:
             return LoadingScreen();

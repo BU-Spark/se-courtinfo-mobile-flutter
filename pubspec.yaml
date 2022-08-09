@@ -25,7 +25,6 @@ dependencies:
   flutter_sticky_header:
   flutter:
     sdk: flutter
-  camera:
   path_provider:
   path:
 
