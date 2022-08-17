@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scdao_mobile/screens/Settings_screen.dart';
+import 'package:scdao_mobile/screens/documents_screen.dart';
 
 class BottomNavBar extends StatelessWidget {
-  BottomNavBar({Key? key, required this.navOnPressed}) : super(key: key);
-  final void Function(String) navOnPressed;
+  final void Function(String namedRoute) pushNamedRoute;
+  BottomNavBar({Key? key, required this.pushNamedRoute}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
             flex: 2,
             child: IconButton(
               splashRadius: 1,
-              onPressed: () => this.navOnPressed("1"),
+              onPressed: () => this.pushNamedRoute(DocumentsScreen.routeName),
               icon: Icon(
                 Icons.folder_open_outlined,
                 color: Color.fromARGB(255, 5, 44, 75), //TODO: change to theme
@@ -42,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
             flex: 2,
             child: IconButton(
               splashRadius: 1,
-              onPressed: () => this.navOnPressed("3"),
+              onPressed: () => this.pushNamedRoute(SettingsScreen.routeName),
               icon: Icon(
                 Icons.settings,
                 color: Color.fromARGB(255, 5, 44, 75), //TODO: change to theme

@@ -4,18 +4,18 @@ class DocumentsListView extends StatelessWidget {
   const DocumentsListView({
     Key? key,
     required this.documentsList,
-    required this.heightPadding,
-    required this.widthPadding,
     required this.isDescending,
   }) : super(key: key);
 
   final List<String> documentsList;
-  final double heightPadding;
-  final double widthPadding;
   final bool isDescending;
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData = MediaQuery.of(context);
+    double widthPadding = queryData.size.width * 0.05;
+    double heightPadding = queryData.size.height * 0.02;
+
     return documentsList.length != 0
         ? ListView.builder(
             shrinkWrap: true,
@@ -95,18 +95,18 @@ class DocumentsListView extends StatelessWidget {
         : Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Uh oh, you don't have any document yet!",
+              const Text(
+                "Uh oh, you don't have any document!",
                 style: TextStyle(
                   color:
                       Color.fromARGB(255, 18, 55, 121), //TODO: change to theme
                   fontSize: 18,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "Start scanning files to get started",
                 style: TextStyle(
                   color: Colors.grey, //TODO: change to theme
