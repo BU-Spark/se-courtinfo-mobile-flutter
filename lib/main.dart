@@ -1,41 +1,56 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scdao_mobile/screens/camera_screen.dart';
+import 'package:scdao_mobile/screens/displayphotos_screen.dart';
+import 'package:scdao_mobile/screens/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scdao_mobile/models/user.dart';
 import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
-import 'package:scdao_mobile/screens/document_screen.dart';
 import 'package:scdao_mobile/screens/review_screen.dart';
-import 'package:scdao_mobile/screens/Settings_screen.dart';
-import 'package:scdao_mobile/screens/Privacy/privacy_screen.dart';
-import 'package:scdao_mobile/screens/Privacy/change_password.dart';
-import 'package:scdao_mobile/screens/Privacy/change_username.dart';
 import 'package:scdao_mobile/services/user.dart';
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]);
+
+  // get camera
+  final camera = await availableCameras();
+  final firstCam = camera.first;
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserProvider()),
     ],
     child: new FutureBuilder(
       future: SharedPreferences.getInstance(),
-      builder: ((context, AsyncSnapshot<SharedPreferences> snapshot) =>
-          snapshot.hasData
-              ? MyApp(
-                  prefs: snapshot.data!,
-                )
-              : LoadingScreen()),
+      builder: ((context, AsyncSnapshot<SharedPreferences> snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            if (snapshot.data != null)
+              return MyApp(
+                prefs: snapshot.data!,
+                camera: firstCam,
+              );
+            return MaterialApp(
+                home: LoadingScreen()); //TODO: create error screen
+          default:
+            return MaterialApp(home: LoadingScreen());
+        }
+      }),
     ),
   ));
 }
 
 class MyApp extends StatefulWidget {
-  final SharedPreferences prefs;
-  MyApp({Key? key, required this.prefs}) : super(key: key);
+  late final SharedPreferences prefs;
+  final CameraDescription camera;
+  MyApp({super.key, required this.prefs, required this.camera});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -69,18 +84,18 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(prefs: widget.prefs),
+      initialRoute: "/",
       routes: {
-        LoginScreen.routeName: (_) => LoginScreen(
+        "/": (context) => LoadingScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(
               prefs: widget.prefs,
             ),
-        SignupScreen.routeName: (_) => SignupScreen(),
-        DocumentScreen.routeName: (_) => DocumentScreen(),
-        ReviewScreen.routeName: (_) => ReviewScreen(),
-        SettingsScreen.routeName: (_) => SettingsScreen(),
-        PrivacyScreen.routeName: (_) => PrivacyScreen(),
-        UsernameScreen.routeName: (_) => UsernameScreen(),
-        PasswordScreen.routeName: (_) => PasswordScreen(),
+        SignupScreen.routeName: (contexxt) => SignupScreen(),
+        ReviewScreen.routeName: (context) => ReviewScreen(),
+        MainScreen.routeName: (context) => MainScreen(),
+        CameraScreen.routeName: (context) =>
+            CameraScreen(camera: widget.camera),
+        DisplayPhotoScreen.routeName: (context) => DisplayPhotoScreen(),
       },
     );
   }
@@ -92,8 +107,30 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Text("Loading"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Loading screen"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            const Text(
+              "Loading",
+              style: TextStyle(
+                fontSize: 50.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.document_scanner,
+              ),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed("/documents"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

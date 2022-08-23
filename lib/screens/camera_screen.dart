@@ -1,223 +1,196 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:scdao_mobile/screens/displayphotos_screen.dart';
 
-// A screen that allows users to take a picture using a given camera.
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({
-    Key? key,
-    required this.camera,
-  }) : super(key: key);
-  static const String routeName = "/camera";
-  final CameraDescription camera;
+  const CameraScreen({super.key, required this.camera});
+  static const routeName = "camera";
 
+  final CameraDescription camera;
   @override
-  CameraScreenState createState() => CameraScreenState();
+  State<CameraScreen> createState() => _CameraScreenState();
 }
 
-class CameraScreenState extends State<CameraScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
+class _CameraScreenState extends State<CameraScreen> {
+  late CameraController _cameraController;
+  late Future<void> _initControllerFuture;
+  bool showFocusCircle = false;
+  double xTap = 0;
+  double yTap = 0;
+  XFile? imageFile;
 
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
+    _cameraController = CameraController(
       widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
     );
 
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+    _initControllerFuture = _cameraController.initialize();
   }
 
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 60, // Set this height
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              color: Color(0xFF1F2C5C),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
+    MediaQueryData queryData = MediaQuery.of(context);
+    final iconSize = queryData.size.width * 0.16;
+
+    Future<void> _onTap(TapUpDetails details) async {
+      if (_cameraController.value.isInitialized) {
+        showFocusCircle = true;
+        xTap = details.localPosition.dx;
+        yTap = details.localPosition.dy;
+
+        double fullWidth = queryData.size.width;
+        double cameraHeight = fullWidth * _cameraController.value.aspectRatio;
+        Offset point = Offset(xTap / fullWidth, yTap / cameraHeight);
+        await _cameraController.setFocusPoint(point);
+
+        setState(() {
+          Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+            setState(() {
+              showFocusCircle = false;
+            });
+          });
+        });
+      }
+    }
+
+    Widget _cameraPreview() {
+      return AspectRatio(
+          aspectRatio: _cameraController.value.aspectRatio,
+          child: GestureDetector(
+            onTapUp: (details) => _onTap(details),
+            child: Stack(
               children: [
-                SizedBox(
-                  height: 40,
-                ),
-                Text('Scan Documents',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                      fontSize: 22,
-                      color: Color(0XFFFFC032),
-                    )),
+                Container(
+                    width: queryData.size.width,
+                    child: CameraPreview(_cameraController)),
+                if (showFocusCircle)
+                  Positioned(
+                    top: yTap - 40,
+                    left: xTap - 40,
+                    child: Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  )
               ],
             ),
-          ),
-        ),
-        body: Column(children: [
-          SizedBox(height: 60),
-          FutureBuilder<void>(
-            future: _initializeControllerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_controller);
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          Spacer(),
-          Container(
-            color: Color(0xFF1F2C5C),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(45, 10, 10, 10),
-                    child: Icon(
-                      Icons.photo,
-                      size: 40,
-                      color: Colors.white,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(35, 10, 10, 10),
-                  child: FloatingActionButton(
-                    onPressed: () async {
-                      try {
-                        await _initializeControllerFuture;
-                        final image = await _controller.takePicture();
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => DisplayPictureScreen(
-                              imagePath: image.path,
-                            ),
-                          ),
-                        );
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 40.0,
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: 26.5,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 23.0,
+          ));
+    }
+
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 27, 27, 27),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 5,
+              child: Container(
+                child: FutureBuilder<void>(
+                  future: _initControllerFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return _cameraPreview();
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        padding: const EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: iconSize / 2,
                         ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 25, 10),
-                    child: Image(
-                      image: AssetImage("lib/assets/Review.png"),
-                      height: 35.0,
-                    )),
-              ],
-            ),
-          )
-        ]));
-  }
-}
-
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
-
-  const DisplayPictureScreen({Key? key, required this.imagePath})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    int _selectedIndex = 0;
-    void _onItemTapped(int index) {
-      _selectedIndex = index;
-      if (index == 1) {
-        Navigator.of(context).pushNamed('reviewPage');
-      } else {
-        Navigator.of(context).pushNamed('CameraPage');
-      }
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        toolbarHeight: 60, // Set this height
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFF1F2C5C),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 40,
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: IconButton(
+                        onPressed: _onPressedCapture,
+                        padding: const EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.circle,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: IconButton(
+                        onPressed: () => print("photos"),
+                        padding: const EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.panorama,
+                          color: Colors.white,
+                          size: iconSize,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-              Text('Confirm Picture',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
-                    fontSize: 22,
-                    color: Color(0XFFFFC032),
-                  )),
-            ],
-          ),
+            )
+          ],
         ),
       ),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 50,
-            ),
-            Image.file(File(imagePath)),
-          ]),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF1F2C5C),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              "lib/assets/Retake.png",
-              width: 40,
-              height: 40,
-            ),
-            label: 'RETAKE',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              "lib/assets/Upload.png",
-              width: 40,
-              height: 40,
-            ),
-            label: 'UPLOAD',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
     );
+  }
+
+  Future<void> _onPressedCapture() async {
+    try {
+      // Ensure that the camera is initialized.
+      await _initControllerFuture;
+      if (mounted) {
+        final image = await _cameraController.takePicture();
+        Navigator.pushNamed(
+          context,
+          DisplayPhotoScreen.routeName,
+          arguments: DisplayPhotoArgs(image.path),
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
