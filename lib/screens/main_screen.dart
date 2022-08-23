@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/documents_screen.dart';
@@ -13,9 +14,6 @@ class MainScreen extends StatelessWidget {
     print("settings.name: ${settings.name}");
     late Widget page;
     switch (settings.name) {
-      case CameraScreen.routeName:
-        page = CameraScreen();
-        break;
       default:
         page = DocumentsScreen();
         break;
@@ -41,7 +39,6 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
     final double iconSize = queryData.size.width * 0.18;
-    bool showKeyboard = queryData.viewInsets.bottom != 0;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -57,7 +54,8 @@ class MainScreen extends StatelessWidget {
         height: iconSize + 10,
         width: iconSize + 10,
         child: FloatingActionButton(
-          onPressed: () => _pushNamedRoute(CameraScreen.routeName),
+          onPressed: () =>
+              Navigator.of(context).pushNamed(CameraScreen.routeName),
           child: Icon(
             Icons.camera_alt,
             size: iconSize / 1.5,

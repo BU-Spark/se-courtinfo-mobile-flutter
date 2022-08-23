@@ -2,6 +2,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:scdao_mobile/screens/camera_screen.dart';
+import 'package:scdao_mobile/screens/displayphotos_screen.dart';
 import 'package:scdao_mobile/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scdao_mobile/models/user.dart';
@@ -18,8 +20,8 @@ Future<void> main() async {
       overlays: [SystemUiOverlay.top]);
 
   // get camera
-  // final camera = await availableCameras();
-  // final firstCam = camera.first;
+  final camera = await availableCameras();
+  final firstCam = camera.first;
 
   runApp(MultiProvider(
     providers: [
@@ -33,7 +35,7 @@ Future<void> main() async {
             if (snapshot.data != null)
               return MyApp(
                 prefs: snapshot.data!,
-                // camera: firstCam,
+                camera: firstCam,
               );
             return MaterialApp(
                 home: LoadingScreen()); //TODO: create error screen
@@ -47,8 +49,8 @@ Future<void> main() async {
 
 class MyApp extends StatefulWidget {
   late final SharedPreferences prefs;
-  // final CameraDescription camera;
-  MyApp({Key? key, required this.prefs}) : super(key: key);
+  final CameraDescription camera;
+  MyApp({super.key, required this.prefs, required this.camera});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -84,13 +86,16 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       routes: {
-        "/": (_) => LoadingScreen(),
-        LoginScreen.routeName: (_) => LoginScreen(
+        "/": (context) => LoadingScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(
               prefs: widget.prefs,
             ),
-        SignupScreen.routeName: (_) => SignupScreen(),
-        ReviewScreen.routeName: (_) => ReviewScreen(),
-        MainScreen.routeName: (_) => MainScreen(),
+        SignupScreen.routeName: (contexxt) => SignupScreen(),
+        ReviewScreen.routeName: (context) => ReviewScreen(),
+        MainScreen.routeName: (context) => MainScreen(),
+        CameraScreen.routeName: (context) =>
+            CameraScreen(camera: widget.camera),
+        DisplayPhotoScreen.routeName: (context) => DisplayPhotoScreen(),
       },
     );
   }
