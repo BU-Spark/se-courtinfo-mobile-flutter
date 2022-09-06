@@ -1,5 +1,5 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scdao_mobile/screens/camera_screen.dart';
 import 'package:scdao_mobile/screens/documents_screen.dart';
 
@@ -44,6 +44,12 @@ class MainScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       extendBody: true,
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        toolbarHeight: 0,
+      ),
       body: Navigator(
         key: _navigatorKeys,
         initialRoute: 'documents',

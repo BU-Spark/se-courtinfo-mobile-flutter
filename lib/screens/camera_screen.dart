@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:scdao_mobile/screens/displayphotos_screen.dart';
+import 'package:scdao_mobile/utils/ImageUtils.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key, required this.camera});
@@ -21,6 +24,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void initState() {
+    ImageUtility.getImagesFromPreferences().then((value) => print(value));
     super.initState();
     _cameraController = CameraController(
       widget.camera,
@@ -126,7 +130,10 @@ class _CameraScreenState extends State<CameraScreen> {
                       height: iconSize,
                       width: iconSize,
                       child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () async {
+                          await ImageUtility.resetImages();
+                          Navigator.of(context).pop();
+                        },
                         padding: const EdgeInsets.all(0),
                         icon: Icon(
                           Icons.close,
@@ -158,13 +165,21 @@ class _CameraScreenState extends State<CameraScreen> {
                       height: iconSize,
                       width: iconSize,
                       child: IconButton(
-                        onPressed: () => print("photos"),
-                        padding: const EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.panorama,
-                          color: Colors.white,
-                          size: iconSize,
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          DisplayPhotoScreen.routeName,
                         ),
+                        padding: const EdgeInsets.all(0),
+                        icon: imageFile == null
+                            ? Icon(
+                                Icons.panorama,
+                                color: Colors.white,
+                                size: iconSize,
+                              )
+                            : SizedBox(
+                                child: Image.file(File(imageFile!.path)),
+                                height: iconSize,
+                              ),
                       ),
                     ),
                   )
@@ -183,11 +198,10 @@ class _CameraScreenState extends State<CameraScreen> {
       await _initControllerFuture;
       if (mounted) {
         final image = await _cameraController.takePicture();
-        Navigator.pushNamed(
-          context,
-          DisplayPhotoScreen.routeName,
-          arguments: DisplayPhotoArgs(image.path),
-        );
+        setState(() {
+          imageFile = image;
+        });
+        await ImageUtility.saveImageToPreferences(image.path);
       }
     } catch (e) {
       print(e);
