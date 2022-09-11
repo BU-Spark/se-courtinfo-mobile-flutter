@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/displayphotos_screen.dart';
+import 'package:scdao_mobile/utils/ImageUtils.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key, required this.camera});
@@ -17,7 +22,6 @@ class _CameraScreenState extends State<CameraScreen> {
   bool showFocusCircle = false;
   double xTap = 0;
   double yTap = 0;
-  XFile? imageFile;
 
   @override
   void initState() {
@@ -26,7 +30,6 @@ class _CameraScreenState extends State<CameraScreen> {
       widget.camera,
       ResolutionPreset.max,
     );
-
     _initControllerFuture = _cameraController.initialize();
   }
 
@@ -41,6 +44,21 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
     final iconSize = queryData.size.width * 0.16;
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+
+    Future<void> _onPressedCapture() async {
+      try {
+        // Ensure that the camera is initialized.
+        await _initControllerFuture;
+        if (mounted) {
+          final image = await _cameraController.takePicture();
+          userProvider.setPreviewImgPath(image.path);
+          await ImageUtility.saveImageToPreferences(image.path);
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
 
     Future<void> _onTap(TapUpDetails details) async {
       if (_cameraController.value.isInitialized) {
@@ -60,6 +78,16 @@ class _CameraScreenState extends State<CameraScreen> {
             });
           });
         });
+      }
+    }
+
+    void _onPressedToPhotos() async {
+      List<String> images = await ImageUtility.getImagesFromPreferences();
+      if (images.isNotEmpty) {
+        Navigator.pushNamed(
+          context,
+          DisplayPhotoScreen.routeName,
+        );
       }
     }
 
@@ -126,7 +154,11 @@ class _CameraScreenState extends State<CameraScreen> {
                       height: iconSize,
                       width: iconSize,
                       child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () async {
+                          userProvider.setPreviewImgPath(null);
+                          await ImageUtility.resetImages();
+                          Navigator.of(context).pop();
+                        },
                         padding: const EdgeInsets.all(0),
                         icon: Icon(
                           Icons.close,
@@ -158,13 +190,19 @@ class _CameraScreenState extends State<CameraScreen> {
                       height: iconSize,
                       width: iconSize,
                       child: IconButton(
-                        onPressed: () => print("photos"),
+                        onPressed: _onPressedToPhotos,
                         padding: const EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.panorama,
-                          color: Colors.white,
-                          size: iconSize,
-                        ),
+                        icon: userProvider.previewImgPath == null
+                            ? Icon(
+                                Icons.panorama,
+                                color: Colors.white,
+                                size: iconSize,
+                              )
+                            : SizedBox(
+                                child: Image.file(
+                                    File(userProvider.previewImgPath!)),
+                                height: iconSize,
+                              ),
                       ),
                     ),
                   )
@@ -175,22 +213,5 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _onPressedCapture() async {
-    try {
-      // Ensure that the camera is initialized.
-      await _initControllerFuture;
-      if (mounted) {
-        final image = await _cameraController.takePicture();
-        Navigator.pushNamed(
-          context,
-          DisplayPhotoScreen.routeName,
-          arguments: DisplayPhotoArgs(image.path),
-        );
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 }
