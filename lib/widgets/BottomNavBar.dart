@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scdao_mobile/screens/Settings_screen.dart';
 import 'package:scdao_mobile/screens/documents_screen.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -46,7 +45,8 @@ class BottomNavBar extends StatelessWidget {
               flex: 2,
               child: IconButton(
                 splashRadius: 1,
-                onPressed: () => this.pushNamedRoute(SettingsScreen.routeName),
+                onPressed: () => this.pushNamedRoute(
+                    DocumentsScreen.routeName), //TODO: change to settings
                 icon: Icon(
                   Icons.settings,
                   color: Color.fromARGB(255, 5, 44, 75), //TODO: change to theme

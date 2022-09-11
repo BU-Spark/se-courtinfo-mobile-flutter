@@ -10,7 +10,6 @@ import 'package:scdao_mobile/models/user.dart';
 import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/screens/login_screen.dart';
-import 'package:scdao_mobile/screens/review_screen.dart';
 import 'package:scdao_mobile/services/user.dart';
 import 'dart:async';
 
@@ -91,7 +90,6 @@ class _MyAppState extends State<MyApp> {
               prefs: widget.prefs,
             ),
         SignupScreen.routeName: (contexxt) => SignupScreen(),
-        ReviewScreen.routeName: (context) => ReviewScreen(),
         MainScreen.routeName: (context) => MainScreen(),
         CameraScreen.routeName: (context) =>
             CameraScreen(camera: widget.camera),

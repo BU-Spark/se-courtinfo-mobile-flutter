@@ -17,19 +17,12 @@ class DisplayPhotoScreen extends StatefulWidget {
 class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
   int _currIndex = 0;
   List<String> _imagePaths = [];
-  List<CroppedFile> _croppedFiles = [];
 
   @override
   void initState() {
     ImageUtility.getImagesFromPreferences().then((values) {
-      print(values);
       setState(() {
         this._imagePaths = values;
-        this._croppedFiles = values
-            .map(
-              (e) => CroppedFile(e),
-            )
-            .toList();
       });
     });
     super.initState();
