@@ -7,7 +7,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
-import 'dart:io';
 
 class SignupScreen extends ConsumerStatefulWidget {
   static const String routeName = "/signup";

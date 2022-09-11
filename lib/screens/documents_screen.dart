@@ -10,10 +10,13 @@ class DocumentsScreen extends StatefulWidget {
   State<DocumentsScreen> createState() => _DocumentsScreenState();
 }
 
+enum FilterOptions { name, date, birthDate }
+
 class _DocumentsScreenState extends State<DocumentsScreen> {
   final _searchController = TextEditingController();
   bool isDescendingOrder = false;
   List<String> displayDocuments = [];
+  //TODO: change type from String to a document data model
   List<String> documents = [
     "bye",
     "yeet",
@@ -23,15 +26,21 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     "hello",
   ];
 
-  void _reorderDocumentsList() {
-    setState(() {
-      isDescendingOrder = !isDescendingOrder;
-      if (!isDescendingOrder) {
-        displayDocuments.sort((a, b) => b.compareTo(a));
-      } else {
-        displayDocuments.sort((a, b) => a.compareTo(b));
-      }
-    });
+  void _onSelectedSort(FilterOptions options) {
+    switch (options) {
+      case FilterOptions.name:
+        setState(() {
+          isDescendingOrder = !isDescendingOrder;
+          if (!isDescendingOrder) {
+            displayDocuments.sort((a, b) => b.compareTo(a));
+          } else {
+            displayDocuments.sort((a, b) => a.compareTo(b));
+          }
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -132,14 +141,30 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       color: Colors.blueAccent.withOpacity(0.5),
                     ),
                   ),
-                  IconButton(
+                  PopupMenuButton(
+                    position: PopupMenuPosition.under,
                     splashRadius: 1.0,
-                    onPressed: _reorderDocumentsList,
-                    icon: Icon(
-                      Icons.menu,
-                      size: 28.0,
-                      color: Colors.blueAccent.withOpacity(0.5),
+                    onSelected: _onSelectedSort,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
                     ),
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<FilterOptions>>[
+                      const PopupMenuItem<FilterOptions>(
+                        value: FilterOptions.name,
+                        child: Text('Name'),
+                      ),
+                      const PopupMenuItem<FilterOptions>(
+                        value: FilterOptions.date,
+                        child: Text('Date'),
+                      ),
+                      const PopupMenuItem<FilterOptions>(
+                        value: FilterOptions.birthDate,
+                        child: Text('Birth Date'),
+                      ),
+                    ],
+                    icon: Icon(Icons.menu,
+                        size: 28, color: Colors.blueAccent.withOpacity(0.5)),
                   )
                 ],
               )
