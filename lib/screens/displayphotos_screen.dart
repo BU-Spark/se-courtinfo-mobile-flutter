@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
+import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/utils/ImageUtils.dart';
 
 class DisplayPhotoScreen extends StatefulWidget {
@@ -14,6 +17,7 @@ class DisplayPhotoScreen extends StatefulWidget {
 class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
   int _currIndex = 0;
   List<String> _imagePaths = [];
+  List<CroppedFile> _croppedFiles = [];
 
   @override
   void initState() {
@@ -21,6 +25,11 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
       print(values);
       setState(() {
         this._imagePaths = values;
+        this._croppedFiles = values
+            .map(
+              (e) => CroppedFile(e),
+            )
+            .toList();
       });
     });
     super.initState();
@@ -34,6 +43,69 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData = MediaQuery.of(context);
+    UserProvider userProvider = Provider.of(context, listen: true);
+
+    void _cropImage() async {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: _imagePaths[_currIndex],
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop',
+            toolbarColor: Colors.black,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Crop',
+          ),
+        ],
+      );
+      if (croppedFile != null) {
+        setState(() {
+          _imagePaths[_currIndex] = croppedFile.path;
+        });
+        await ImageUtility.replaceImagesOnPref(_imagePaths);
+        userProvider.setPreviewImgPath(croppedFile.path);
+      }
+    }
+
+    Widget _appBar() {
+      return SizedBox(
+        height: queryData.size.height * 1 / 10,
+        width: queryData.size.width,
+        child: Container(
+          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back_ios),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => print("album?"),
+                    icon: Icon(Icons.grid_view_outlined),
+                    padding: EdgeInsets.zero,
+                    splashRadius: 1.0,
+                  ),
+                  IconButton(
+                    onPressed: _cropImage,
+                    icon: Icon(Icons.edit_outlined),
+                    padding: EdgeInsets.zero,
+                    splashRadius: 1.0,
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,12 +114,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: queryData.size.height * 1 / 10,
-              child: Row(
-                children: [],
-              ),
-            ),
+            _appBar(),
             Expanded(
               flex: 5,
               child: this._imagePaths.length != 0
@@ -69,15 +136,28 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(
-                      width: 5,
+                      width: 10,
                     ),
                     Icon(
-                      Icons.camera_alt,
+                      Icons.photo_camera_outlined,
                       color: Colors.white,
                     ),
                   ],
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () async {
+                  if (userProvider.previewImgPath == _imagePaths[_currIndex]) {
+                    List<String> newImgs = _imagePaths.where((e) {
+                      return e != _imagePaths[_currIndex];
+                    }).toList();
+                    if (newImgs.length > 0) {
+                      userProvider.setPreviewImgPath(newImgs.first);
+                    } else {
+                      userProvider.setPreviewImgPath(null);
+                    }
+                  }
+                  await ImageUtility.removeImage(_currIndex);
+                  Navigator.of(context).pop();
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
@@ -94,7 +174,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: IconButton(
+                      child: MaterialButton(
                         onPressed: () {
                           if (this._currIndex > 0) {
                             setState(() {
@@ -102,10 +182,17 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
                             });
                           }
                         },
-                        icon: Icon(
-                          Icons.arrow_left_outlined,
-                          color: Colors.grey,
+                        child: Icon(
+                          Icons.arrow_back_ios_outlined,
                         ),
+                        padding: EdgeInsets.all(0),
+                        color: this._currIndex > 0
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.25),
+                        textColor: this._currIndex > 0
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.75),
+                        shape: CircleBorder(),
                       ),
                     ),
                     Expanded(
@@ -117,7 +204,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
                     ),
                     Expanded(
                       flex: 1,
-                      child: IconButton(
+                      child: MaterialButton(
                         onPressed: () {
                           setState(() {
                             if (this._currIndex < this._imagePaths.length - 1) {
@@ -125,10 +212,17 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
                             }
                           });
                         },
-                        icon: Icon(
-                          Icons.arrow_right_outlined,
-                          color: Colors.grey,
+                        child: Icon(
+                          Icons.arrow_forward_ios_outlined,
                         ),
+                        color: this._currIndex < this._imagePaths.length - 1
+                            ? Colors.black
+                            : Colors.black.withOpacity(0.25),
+                        textColor: this._currIndex < this._imagePaths.length - 1
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.75),
+                        padding: EdgeInsets.all(0),
+                        shape: CircleBorder(),
                       ),
                     ),
                   ],
@@ -139,7 +233,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: queryData.size.width * 0.11,
+        height: queryData.size.width * 0.12,
         width: queryData.size.width,
         decoration: BoxDecoration(
           border: Border(
@@ -148,13 +242,27 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
             ),
           ),
         ),
-        child: IconButton(
-          onPressed: () => print("continue"),
-          icon: Icon(
-            Icons.arrow_right,
-            color: Colors.white,
-          ),
-          color: Colors.green,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              width: queryData.size.width * 1 / 8,
+              child: MaterialButton(
+                onPressed: () => print("continue"),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+                color: Colors.green,
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
+              ),
+            ),
+            SizedBox(
+              width: queryData.size.width * 1 / 16,
+            )
+          ],
         ),
       ),
     );

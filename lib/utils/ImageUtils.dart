@@ -48,4 +48,20 @@ class ImageUtility {
     String base64String = ImageUtility.base64String(imageBytes);
     return await saveImageToPreferences(base64String);
   }
+
+  static Future<bool> removeImage(int index) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> images = prefs.getStringList(KEY) ?? [];
+    if (images.length > 0) {
+      images.removeAt(index);
+      prefs.setStringList(KEY, images);
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> replaceImagesOnPref(List<String> images) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setStringList(KEY, images);
+  }
 }
