@@ -97,6 +97,5 @@ Most of Flutter widgets are based of the Material design by Google, which is why
 3. <b>Retake photos</b>
    
    Display photos screen &#8594; Press "Retake button" (deletes the current photo) &#8594; Camera screen
-<center>
+
 <img src="https://media3.giphy.com/media/JIY74bvf6EPgojc3Lx/giphy.gif" />
-</center>
