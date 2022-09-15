@@ -98,4 +98,4 @@ Most of Flutter widgets are based of the Material design by Google, which is why
    
    Display photos screen &#8594; Press "Retake button" (deletes the current photo) &#8594; Camera screen
 
-<img src="https://media1.giphy.com/media/JIY74bvf6EPgojc3Lx/giphy.gif?cid=790b7611026a95fda90555ead8f46019f7de5db09c0685c4&rid=giphy.gif&ct=g" />
+![copping_photos_ux_flow](https://user-images.githubusercontent.com/52475722/190462137-20411110-6fe0-40cf-b953-421a5b5b9c4c.gif)
