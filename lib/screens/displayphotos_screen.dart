@@ -5,6 +5,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/utils/ImageUtils.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class DisplayPhotoScreen extends StatefulWidget {
   static const routeName = "/display";
@@ -98,6 +100,55 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
           ),
         ),
       );
+    }
+
+    postData(filepaths, apiUrl) async {
+      try {
+        var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+
+        //TODO: request fields
+        request.fields['userid'] = '1';
+        request.fields['cooking_date'] = '2022-10-22';
+
+        List<http.MultipartFile> newList = <http.MultipartFile>[];
+
+        for (int i = 0; i < filepaths.length; i++) {
+          File imageFile = File(filepaths[i]);
+          var stream = new http.ByteStream(imageFile.openRead());
+          var length = await imageFile.length();
+          var multipartFile = new http.MultipartFile("pictures", stream, length,
+              filename: path.basename(imageFile.path));
+          newList.add(multipartFile);
+        }
+        request.files.addAll(newList);
+
+        var res = await request.send();
+        print(res.toString());
+
+        res.stream.listen((value) {
+          print('value');
+          print(value);
+        });
+        if (res.statusCode == 200) {
+          print('uploaded');
+        } else {
+          print('failed');
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
+    //Uploading function
+    void _uploadImage() async {
+      print('continue');
+
+      final String address = "http://127.0.0.1/api";
+      try {
+        postData(this._imagePaths, address + '/v1/uploads/ddi');
+      } on SocketException catch (_) {
+        print("You are not connected to internet");
+      }
     }
 
     return Scaffold(
@@ -241,7 +292,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
             SizedBox(
               width: queryData.size.width * 1 / 8,
               child: MaterialButton(
-                onPressed: () => print("continue"),
+                onPressed: _uploadImage,
                 child: Icon(
                   Icons.arrow_forward,
                   color: Colors.white,
