@@ -11,6 +11,7 @@ class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key, required this.camera});
   static const routeName = "camera";
 
+
   final CameraDescription camera;
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -22,7 +23,7 @@ class _CameraScreenState extends State<CameraScreen> {
   bool showFocusCircle = false;
   double xTap = 0;
   double yTap = 0;
-
+  bool flashValue = false;
   @override
   void initState() {
     super.initState();
@@ -91,7 +92,10 @@ class _CameraScreenState extends State<CameraScreen> {
       }
     }
 
+
+
     Widget _cameraPreview() {
+
       return AspectRatio(
           aspectRatio: _cameraController.value.aspectRatio,
           child: GestureDetector(
@@ -122,11 +126,20 @@ class _CameraScreenState extends State<CameraScreen> {
           ));
     }
 
+
     return Scaffold(
+
       backgroundColor: Color.fromARGB(255, 27, 27, 27),
       body: SafeArea(
         child: Column(
           children: [
+
+            AppBar(
+              title: Text("Scan Documents"),
+              backgroundColor: Colors.black,
+              centerTitle: true,
+            ),
+
             Expanded(
               flex: 5,
               child: Container(
@@ -144,10 +157,12 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
               ),
             ),
+
             Expanded(
               flex: 1,
               child: Row(
                 children: [
+
                   Expanded(
                     flex: 1,
                     child: SizedBox(
@@ -168,6 +183,26 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                     ),
                   ),
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child:Column(
+                            children:[
+                              Expanded(child: Text(flashValue? "Flash On" : "Flash Off", style: TextStyle(color: Colors.white))),
+                              Expanded(child: Switch(
+                                  value: flashValue,
+                                  onChanged: (newValue){
+                                    setState(() {
+                                      flashValue = newValue;
+                                      _cameraController.setFlashMode(flashValue? FlashMode.always:FlashMode.off);
+                                    });
+
+                                  }))]),
+                      )
+
+                    ),
                   Expanded(
                     flex: 1,
                     child: SizedBox(
@@ -206,6 +241,24 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                     ),
                   )
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: SizedBox(
+                  //     height: iconSize,
+                  //     width: iconSize,
+                  //     child:  ElevatedButton(
+                  //       onPressed: () {
+                  //         _cameraController.setFlashMode(FlashMode.always);
+                  //       },
+                  //       style: ElevatedButton.styleFrom(primary: Colors.transparent),
+                  //       child: Text(
+                  //         "Flash On",
+                  //         style: TextStyle(
+                  //             color: Colors.white, backgroundColor: Colors.transparent),
+                  //       ),
+                  //     ),
+                  //     ),
+                  //   ),
                 ],
               ),
             )
