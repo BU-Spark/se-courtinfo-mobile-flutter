@@ -23,7 +23,8 @@ class _CameraScreenState extends State<CameraScreen> {
   bool showFocusCircle = false;
   double xTap = 0;
   double yTap = 0;
-  bool flashValue = false;
+  bool flashClick = false;
+
   @override
   void initState() {
     super.initState();
@@ -93,9 +94,7 @@ class _CameraScreenState extends State<CameraScreen> {
     }
 
 
-
     Widget _cameraPreview() {
-
       return AspectRatio(
           aspectRatio: _cameraController.value.aspectRatio,
           child: GestureDetector(
@@ -128,143 +127,157 @@ class _CameraScreenState extends State<CameraScreen> {
 
 
     return Scaffold(
+        backgroundColor: Color.fromARGB(255, 27, 27, 27),
+        body: SafeArea(
+          child: Column(
+            children: [
 
-      backgroundColor: Color.fromARGB(255, 27, 27, 27),
-      body: SafeArea(
-        child: Column(
-          children: [
-
-            AppBar(
-              title: Text("Scan Documents"),
-              backgroundColor: Colors.black,
-              centerTitle: true,
-            ),
-
-            Expanded(
-              flex: 5,
-              child: Container(
-                child: FutureBuilder<void>(
-                  future: _initControllerFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return _cameraPreview();
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
-
-            Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      height: iconSize,
-                      width: iconSize,
-                      child: IconButton(
-                        onPressed: () async {
-                          userProvider.setPreviewImgPath(null);
-                          await ImageUtility.resetImages();
-                          Navigator.of(context).pop();
+              AppBar(
+                title: Text("Scan Documents", style: TextStyle(fontSize: 20)),
+                iconTheme: IconThemeData(color: Colors.white),
+                backgroundColor: Colors.black,
+                centerTitle: true,
+                actions: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.black),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            flashClick = !flashClick;
+                            _cameraController.setFlashMode(
+                                flashClick ? FlashMode.always : FlashMode.off);
+                          });
                         },
-                        padding: const EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: iconSize / 2,
-                        ),
+
+                        child: Icon(flashClick? Icons.flash_on
+                            : Icons.flash_off),
+
+                      ),
+
+
+                      // Expanded(child: Text(flashValue? "Flash On" : "Flash Off", style: TextStyle(fontSize: 10, color: Colors.white))),
+                      // Expanded(child: Switch(
+                      //     value: flashValue,
+                      //     inactiveTrackColor: Colors.grey,
+                      //     onChanged: (newValue){
+                      //       setState(() {
+                      //         flashValue = newValue;
+                      //         _cameraController.setFlashMode(flashValue? FlashMode.always:FlashMode.off);
+                      //       });
+                      //
+                      //     }))]),
+                ],
+              ),
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      child: FutureBuilder<void>(
+                        future: _initControllerFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            return _cameraPreview();
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
+
                   Expanded(
                     flex: 1,
-                    child: SizedBox(
-                      height: iconSize,
-                      width: iconSize,
-                      child:Column(
-                            children:[
-                              Expanded(child: Text(flashValue? "Flash On" : "Flash Off", style: TextStyle(color: Colors.white))),
-                              Expanded(child: Switch(
-                                  value: flashValue,
-                                  onChanged: (newValue){
-                                    setState(() {
-                                      flashValue = newValue;
-                                      _cameraController.setFlashMode(flashValue? FlashMode.always:FlashMode.off);
-                                    });
+                    child: Row(
+                      children: [
 
-                                  }))]),
-                      )
-
-                    ),
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      height: iconSize,
-                      width: iconSize,
-                      child: IconButton(
-                        onPressed: _onPressedCapture,
-                        padding: const EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.circle,
-                          color: Colors.white,
-                          size: iconSize,
+                        Expanded(
+                          flex: 1,
+                          child: SizedBox(
+                            height: iconSize,
+                            width: iconSize,
+                            child: IconButton(
+                              onPressed: () async {
+                                userProvider.setPreviewImgPath(null);
+                                await ImageUtility.resetImages();
+                                Navigator.of(context).pop();
+                              },
+                              padding: const EdgeInsets.all(0),
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: iconSize / 2,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      height: iconSize,
-                      width: iconSize,
-                      child: IconButton(
-                        onPressed: _onPressedToPhotos,
-                        padding: const EdgeInsets.all(0),
-                        icon: userProvider.previewImgPath == null
-                            ? Icon(
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: SizedBox(
+                        //     height: iconSize,
+                        //     width: iconSize,
+                        //     child:Column(
+                        //           children:[
+                        //             Expanded(child: Text(flashValue? "Flash On" : "Flash Off", style: TextStyle(color: Colors.white))),
+                        //             Expanded(child: Switch(
+                        //                 value: flashValue,
+                        //                 onChanged: (newValue){
+                        //                   setState(() {
+                        //                     flashValue = newValue;
+                        //                     _cameraController.setFlashMode(flashValue? FlashMode.always:FlashMode.off);
+                        //                   });
+                        //
+                        //                 }))]),
+                        //     )
+                        //
+                        //   ),
+                        Expanded(
+                          flex: 1,
+                          child: SizedBox(
+                            height: iconSize,
+                            width: iconSize,
+                            child: IconButton(
+                              onPressed: _onPressedCapture,
+                              padding: const EdgeInsets.all(0),
+                              icon: Icon(
+                                Icons.circle,
+                                color: Colors.white,
+                                size: iconSize,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SizedBox(
+                            height: iconSize,
+                            width: iconSize,
+                            child: IconButton(
+                              onPressed: _onPressedToPhotos,
+                              padding: const EdgeInsets.all(0),
+                              icon: userProvider.previewImgPath == null
+                                  ? Icon(
                                 Icons.panorama,
                                 color: Colors.white,
                                 size: iconSize,
                               )
-                            : SizedBox(
+                                  : SizedBox(
                                 child: Image.file(
                                     File(userProvider.previewImgPath!)),
                                 height: iconSize,
                               ),
-                      ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   )
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: SizedBox(
-                  //     height: iconSize,
-                  //     width: iconSize,
-                  //     child:  ElevatedButton(
-                  //       onPressed: () {
-                  //         _cameraController.setFlashMode(FlashMode.always);
-                  //       },
-                  //       style: ElevatedButton.styleFrom(primary: Colors.transparent),
-                  //       child: Text(
-                  //         "Flash On",
-                  //         style: TextStyle(
-                  //             color: Colors.white, backgroundColor: Colors.transparent),
-                  //       ),
-                  //     ),
-                  //     ),
-                  //   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+
+            ],
+          ),
+        )
     );
   }
 }
