@@ -155,6 +155,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
                       ),
 
+                      // testtest
 
                       // Expanded(child: Text(flashValue? "Flash On" : "Flash Off", style: TextStyle(fontSize: 10, color: Colors.white))),
                       // Expanded(child: Switch(
