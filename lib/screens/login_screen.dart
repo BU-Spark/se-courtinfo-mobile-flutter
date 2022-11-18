@@ -7,7 +7,6 @@ import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/services/user.dart';
 import 'package:scdao_mobile/widgets/auth_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter/foundation.dart';
 
 class LoginScreen extends StatefulWidget {
