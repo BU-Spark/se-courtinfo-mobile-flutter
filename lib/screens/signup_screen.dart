@@ -18,7 +18,7 @@ final signupRepositoryProvider =
     Provider<SignupRepository>((ref) => SignupRepository());
 
 class SignupRepository {
-  var url = Uri.parse("http://192.168.0.44:8888/api/signup");
+  var url = Uri.parse("http://192.168.1.104/api/signup");
   Future<http.Response> signup(String username, String password) async {
     Map<String, String> bodyParams = new Map();
     bodyParams["username"] = username;
@@ -223,8 +223,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       text: 'Login',
                       style: linkStyle,
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () =>
-                            {Navigator.of(context).pushNamed('loginPage')}),
+                        ..onTap =
+                            () => {Navigator.of(context).pushNamed('/login')}),
                 ],
               ),
             ),
@@ -245,7 +245,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     .read(signupRepositoryProvider)
                     .signup(_userNametext.text, _passwordtext.text);
 
-                Navigator.of(context).pushNamed('loginPage');
+                Navigator.of(context).pushNamed('/login');
                 print("Yes!!");
               },
               child: Text(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:scdao_mobile/services/service.dart';
 import 'package:http/http.dart' as http;
 import '../models/user.dart';
+import 'package:flutter/foundation.dart';
 
 class UserService extends HttpService {
   Future<UserModel?> login(String username, String password) async {
@@ -15,6 +16,8 @@ class UserService extends HttpService {
       "accept": "application/json",
     };
     Uri uri = apiAddress("/token");
+    debugPrint('exception_login_screen: $uri');
+
     print(uri.toString());
     final http.Response res = await http.post(
       uri,
