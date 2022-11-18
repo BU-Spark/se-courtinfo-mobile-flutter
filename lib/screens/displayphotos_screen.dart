@@ -5,6 +5,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:scdao_mobile/providers/user.dart';
 import 'package:scdao_mobile/utils/ImageUtils.dart';
+import 'package:scdao_mobile/services/service.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
@@ -143,9 +144,9 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
     void _uploadImage() async {
       print('continue');
 
-      final String address = "http://127.0.0.1/api";
+      Uri uri = HttpService.apiAddress("/token");
       try {
-        postData(this._imagePaths, address + '/v1/uploads/ddi');
+        postData(this._imagePaths, uri);
       } on SocketException catch (_) {
         print("You are not connected to internet");
       }
