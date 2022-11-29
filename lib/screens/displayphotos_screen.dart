@@ -107,10 +107,6 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
       try {
         var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
 
-        //TODO: request fields
-        request.fields['userid'] = '1';
-        request.fields['cooking_date'] = '2022-10-22';
-
         List<http.MultipartFile> newList = <http.MultipartFile>[];
 
         for (int i = 0; i < filepaths.length; i++) {
