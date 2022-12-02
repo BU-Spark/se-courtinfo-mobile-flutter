@@ -15,9 +15,11 @@ enum FilterOptions { name, modifyDate, birthDate }
 
 class _DocumentsScreenState extends State<DocumentsScreen> {
   final _searchController = TextEditingController();
+  late Filter filter;
   int _selectedType = 0;
   int _selectedOrder = 0;
   int _selectedFilter = 0;
+  bool displayMenu = false;
   bool isDescendingOrder = false;
   List<String> displayDocuments = [];
   //TODO: change type from String to a document data model
@@ -67,6 +69,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         }
       });
     });
+  }
+
+  void openMenu() {
+
+  }
+
+  void closeMenu() {
+    
   }
 
   void _setTypeIndex(int value) {
@@ -168,14 +178,13 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       color: Colors.blueAccent.withOpacity(0.5),
                     ),
                   ),
-                  // Filter(
-                  //   typeindex: _setTypeIndex,
-                  //   filterindex: _setFilterIndex,
-                  //   orderindex: _setOrderIndex,
-                  //   selectedFilter: _selectedFilter,
-                  //   selectedOrder: _selectedOrder,
-                  //   selectedType: _selectedType,
-                  // ),
+                  GestureDetector(
+                    onTap: () => {
+                      if (displayMenu) {closeMenu()} else {openMenu()}
+                    },
+                    child: Icon(Icons.menu,
+                        size: 28, color: Colors.blueAccent.withOpacity(0.5))
+                  ),
                   PopupMenuButton(
                     position: PopupMenuPosition.under,
                     splashRadius: 1.0,
