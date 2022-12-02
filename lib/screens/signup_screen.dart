@@ -6,7 +6,10 @@ import 'package:email_validator/email_validator.dart';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scdao_mobile/screens/login_screen.dart';
 import 'dart:convert';
+
+import '../services/user.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   static const String routeName = "/signup";
@@ -18,7 +21,8 @@ final signupRepositoryProvider =
     Provider<SignupRepository>((ref) => SignupRepository());
 
 class SignupRepository {
-  var url = Uri.parse("http://192.168.0.44:8888/api/signup");
+  // var url = Uri.parse("http://192.168.0.44:8888/api/signup");
+  var url = Uri.parse("http://192.168.0.4/api/signup");
   Future<http.Response> signup(String username, String password) async {
     Map<String, String> bodyParams = new Map();
     bodyParams["username"] = username;
@@ -46,6 +50,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _passwordtext = TextEditingController();
   final _emailtext = TextEditingController();
   final _confirmPtext = TextEditingController();
+  UserService userService = UserService();
+
   bool _email = true;
   bool _confirmP = false;
   bool _userName = false;
@@ -241,11 +247,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     _confirmP = true;
                 });
                 log('$_email');
-                res = await ref
-                    .read(signupRepositoryProvider)
-                    .signup(_userNametext.text, _passwordtext.text);
-
-                Navigator.of(context).pushNamed('loginPage');
+                // res = await ref
+                //     .read(signupRepositoryProvider)
+                //     .signup(_userNametext.text, _passwordtext.text);
+                var user = await userService.signUp(_userNametext.text, _passwordtext.text);
+                // Navigator.of(context).pushNamed('loginPage');
+                Navigator.of(context).pushNamed(LoginScreen.routeName);
                 print("Yes!!");
               },
               child: Text(
