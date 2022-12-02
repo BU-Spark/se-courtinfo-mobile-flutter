@@ -230,7 +230,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       style: linkStyle,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () =>
-                            {Navigator.of(context).pushNamed('loginPage')}),
+                            {Navigator.of(context).pushNamed(LoginScreen.routeName)}),
                 ],
               ),
             ),
