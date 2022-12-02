@@ -15,7 +15,7 @@ enum FilterOptions { name, modifyDate, birthDate }
 
 class _DocumentsScreenState extends State<DocumentsScreen> {
   final _searchController = TextEditingController();
-  late Filter filter;
+  late OverlayEntry _overlayEntry;
   int _selectedType = 0;
   int _selectedOrder = 0;
   int _selectedFilter = 0;
@@ -71,29 +71,27 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     });
   }
 
-  void openMenu() {
-
-  }
-
-  void closeMenu() {
-    
-  }
-
   void _setTypeIndex(int value) {
     setState(() {
-      _selectedType = value;
+      _selectedType = 0;
     });
   }
 
   void _setFilterIndex(int value) {
     setState(() {
-      _selectedFilter = value;
+      _selectedFilter = 0;
     });
   }
 
   void _setOrderIndex(int value) {
     setState(() {
       _selectedOrder = value;
+      if (_selectedOrder == 0) {
+        displayDocuments.sort((a, b) => a.compareTo(b));
+      }
+      else {
+        displayDocuments.sort((a, b) => b.compareTo(a));
+      }
     });
   }
 
@@ -102,6 +100,33 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     MediaQueryData queryData = MediaQuery.of(context);
     double widthPadding = queryData.size.width * 0.05;
     double heightPadding = queryData.size.height * 0.02;
+
+    OverlayEntry _overlayEntryBuilder() {
+      return OverlayEntry(builder: (context) {
+        return Positioned(
+            top: 120,
+            left: 60,
+            child: OverlayClass(
+                typeindex: _setTypeIndex,
+                filterindex: _setFilterIndex,
+                orderindex: _setOrderIndex,
+                selectedFilter: _selectedFilter,
+                selectedOrder: _selectedOrder,
+                selectedType: _selectedType)
+          );
+      });
+    }
+
+    void openMenu() {
+      _overlayEntry = _overlayEntryBuilder();
+      Overlay.of(context)!.insert(_overlayEntry);
+      displayMenu = !displayMenu;
+    }
+
+    void closeMenu() {
+      _overlayEntry.remove();
+      displayMenu = !displayMenu;
+    }
 
     return Column(
       children: [
@@ -179,37 +204,36 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => {
-                      if (displayMenu) {closeMenu()} else {openMenu()}
-                    },
-                    child: Icon(Icons.menu,
-                        size: 28, color: Colors.blueAccent.withOpacity(0.5))
-                  ),
-                  PopupMenuButton(
-                    position: PopupMenuPosition.under,
-                    splashRadius: 1.0,
-                    onSelected: _onSelectedSort,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    ),
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<FilterOptions>>[
-                      const PopupMenuItem<FilterOptions>(
-                        value: FilterOptions.name,
-                        child: Text('Name'),
-                      ),
-                      const PopupMenuItem<FilterOptions>(
-                        value: FilterOptions.modifyDate,
-                        child: Text('Modify Date'),
-                      ),
-                      const PopupMenuItem<FilterOptions>(
-                        value: FilterOptions.birthDate,
-                        child: Text('Create Date'),
-                      ),
-                    ],
-                    icon: Icon(Icons.menu,
-                        size: 28, color: Colors.blueAccent.withOpacity(0.5)),
-                  )
+                      onTap: () => {
+                            if (displayMenu) {closeMenu()} else {openMenu()}
+                          },
+                      child: Icon(Icons.menu,
+                          size: 28, color: Colors.blueAccent.withOpacity(0.5))),
+                  // PopupMenuButton(
+                  //   position: PopupMenuPosition.under,
+                  //   splashRadius: 1.0,
+                  //   onSelected: _onSelectedSort,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  //   ),
+                  //   itemBuilder: (BuildContext context) =>
+                  //       <PopupMenuEntry<FilterOptions>>[
+                  //     const PopupMenuItem<FilterOptions>(
+                  //       value: FilterOptions.name,
+                  //       child: Text('Name'),
+                  //     ),
+                  //     const PopupMenuItem<FilterOptions>(
+                  //       value: FilterOptions.modifyDate,
+                  //       child: Text('Modify Date'),
+                  //     ),
+                  //     const PopupMenuItem<FilterOptions>(
+                  //       value: FilterOptions.birthDate,
+                  //       child: Text('Create Date'),
+                  //     ),
+                  //   ],
+                  //   icon: Icon(Icons.menu,
+                  //       size: 28, color: Colors.blueAccent.withOpacity(0.5)),
+                  // )
                 ],
               )
             ],
