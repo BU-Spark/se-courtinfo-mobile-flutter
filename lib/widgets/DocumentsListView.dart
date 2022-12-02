@@ -4,10 +4,16 @@ class DocumentsListView extends StatelessWidget {
   const DocumentsListView({
     Key? key,
     required this.documentsList,
+    required this.type,
+    required this.filter,
+    required this.order,
     required this.isDescending,
   }) : super(key: key);
 
   final List<String> documentsList;
+  final int type;
+  final int filter;
+  final int order;
   final bool isDescending;
 
   @override

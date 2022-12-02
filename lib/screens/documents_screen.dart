@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/DocumentsListView.dart';
+import '../widgets/Filter.dart';
 
 class DocumentsScreen extends StatefulWidget {
   final String? subRoute;
@@ -10,10 +11,13 @@ class DocumentsScreen extends StatefulWidget {
   State<DocumentsScreen> createState() => _DocumentsScreenState();
 }
 
-enum FilterOptions { name, date, birthDate }
+enum FilterOptions { name, modifyDate, birthDate }
 
 class _DocumentsScreenState extends State<DocumentsScreen> {
   final _searchController = TextEditingController();
+  int _selectedType = 0;
+  int _selectedOrder = 0;
+  int _selectedFilter = 0;
   bool isDescendingOrder = false;
   List<String> displayDocuments = [];
   //TODO: change type from String to a document data model
@@ -38,6 +42,10 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           }
         });
         break;
+      case FilterOptions.modifyDate:
+        break;
+      case FilterOptions.birthDate:
+        break;
       default:
         break;
     }
@@ -58,6 +66,24 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           displayDocuments.sort((a, b) => a.compareTo(b));
         }
       });
+    });
+  }
+
+  void _setTypeIndex(int value) {
+    setState(() {
+      _selectedType = value;
+    });
+  }
+
+  void _setFilterIndex(int value) {
+    setState(() {
+      _selectedFilter = value;
+    });
+  }
+
+  void _setOrderIndex(int value) {
+    setState(() {
+      _selectedOrder = value;
     });
   }
 
@@ -134,6 +160,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 children: [
                   IconButton(
                     splashRadius: 1.0,
+                    // TODO: Add new folder
                     onPressed: () => {print("Pressed create new folder!")},
                     icon: Icon(
                       Icons.create_new_folder,
@@ -141,6 +168,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       color: Colors.blueAccent.withOpacity(0.5),
                     ),
                   ),
+                  // Filter(
+                  //   typeindex: _setTypeIndex,
+                  //   filterindex: _setFilterIndex,
+                  //   orderindex: _setOrderIndex,
+                  //   selectedFilter: _selectedFilter,
+                  //   selectedOrder: _selectedOrder,
+                  //   selectedType: _selectedType,
+                  // ),
                   PopupMenuButton(
                     position: PopupMenuPosition.under,
                     splashRadius: 1.0,
@@ -155,12 +190,12 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                         child: Text('Name'),
                       ),
                       const PopupMenuItem<FilterOptions>(
-                        value: FilterOptions.date,
-                        child: Text('Date'),
+                        value: FilterOptions.modifyDate,
+                        child: Text('Modify Date'),
                       ),
                       const PopupMenuItem<FilterOptions>(
                         value: FilterOptions.birthDate,
-                        child: Text('Birth Date'),
+                        child: Text('Create Date'),
                       ),
                     ],
                     icon: Icon(Icons.menu,
@@ -176,6 +211,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
           flex: 5,
           child: DocumentsListView(
             documentsList: displayDocuments,
+            type: _selectedType,
+            filter: _selectedFilter,
+            order: _selectedOrder,
             isDescending: true,
           ),
         )
