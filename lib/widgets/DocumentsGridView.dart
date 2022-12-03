@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'Folder.dart';
 
 class DocumentsGridView extends StatelessWidget {
   const DocumentsGridView({
     Key? key,
-    required this.documentsList,
+    required this.folder,
   }) : super(key: key);
 
-  final List<String> documentsList;
+  final Folder folder;
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +15,59 @@ class DocumentsGridView extends StatelessWidget {
     double widthPadding = queryData.size.width * 0.05;
     double heightPadding = queryData.size.height * 0.02;
 
-    return documentsList.length != 0
+    return folder.documents.length + folder.subfolders.length != 0
         ? GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2),
             shrinkWrap: true,
-            itemCount: documentsList.length,
+            itemCount: folder.documents.length + folder.subfolders.length,
             itemBuilder: (context, index) {
-              return LimitedBox(
+              if (index < folder.subfolders.length) {
+                return LimitedBox(
+                maxHeight: 150 + heightPadding,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: heightPadding / 2,
+                    bottom: heightPadding / 2,
+                    left: widthPadding,
+                    right: widthPadding,
+                  ),
+                  child: Column(
+                    children: [
+                      Image(
+                        image: folder.subfolders[index].isEmpty() ? 
+                        AssetImage('lib/assets/emptyFolder.png') :
+                        AssetImage('lib/assets/folder.png'),
+                        width: 85,
+                        height: 85,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: widthPadding,
+                          top: 15.0,
+                          bottom: 15.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              folder.subfolders[index].name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+              }
+              else {
+                return LimitedBox(
                 maxHeight: 150 + heightPadding,
                 child: Container(
                   padding: EdgeInsets.only(
@@ -47,7 +94,7 @@ class DocumentsGridView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              documentsList[index],
+                              folder.documents[index-folder.subfolders.length],
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
@@ -80,6 +127,8 @@ class DocumentsGridView extends StatelessWidget {
                   ),
                 ),
               );
+              }
+              
             },
           )
         : Column(
