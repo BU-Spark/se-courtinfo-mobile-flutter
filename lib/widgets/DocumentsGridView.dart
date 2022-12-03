@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DocumentsListView extends StatelessWidget {
-  const DocumentsListView({
+class DocumentsGridView extends StatelessWidget {
+  const DocumentsGridView({
     Key? key,
     required this.documentsList,
   }) : super(key: key);
@@ -15,12 +15,13 @@ class DocumentsListView extends StatelessWidget {
     double heightPadding = queryData.size.height * 0.02;
 
     return documentsList.length != 0
-        ? ListView.builder(
+        ? GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
             shrinkWrap: true,
             itemCount: documentsList.length,
             itemBuilder: (context, index) {
               return LimitedBox(
-                maxHeight: 100 + heightPadding,
+                maxHeight: 150 + heightPadding,
                 child: Container(
                   padding: EdgeInsets.only(
                     top: heightPadding / 2,
@@ -28,20 +29,22 @@ class DocumentsListView extends StatelessWidget {
                     left: widthPadding,
                     right: widthPadding,
                   ),
-                  child: Row(
+                  child: Column(
                     children: [
                       Image(
-                        image: AssetImage('lib/assets/File.png')
+                        image: AssetImage('lib/assets/File.png'),
+                        width: 85,
+                        height: 85,
                       ),
                       Padding(
                         padding: EdgeInsets.only(
                           left: widthPadding,
-                          top: 4.0,
-                          bottom: 4.0,
+                          top: 15.0,
+                          bottom: 15.0,
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               documentsList[index],

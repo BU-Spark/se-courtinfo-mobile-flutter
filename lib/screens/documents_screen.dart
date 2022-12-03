@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/DocumentsListView.dart';
+import '../widgets/DocumentsGridView.dart';
 import '../widgets/Filter.dart';
 
 class DocumentsScreen extends StatefulWidget {
@@ -10,8 +11,6 @@ class DocumentsScreen extends StatefulWidget {
   @override
   State<DocumentsScreen> createState() => _DocumentsScreenState();
 }
-
-enum FilterOptions { name, modifyDate, birthDate }
 
 class _DocumentsScreenState extends State<DocumentsScreen> {
   final _searchController = TextEditingController();
@@ -31,27 +30,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     "ayy",
     "hello",
   ];
-
-  void _onSelectedSort(FilterOptions options) {
-    switch (options) {
-      case FilterOptions.name:
-        setState(() {
-          isDescendingOrder = !isDescendingOrder;
-          if (!isDescendingOrder) {
-            displayDocuments.sort((a, b) => b.compareTo(a));
-          } else {
-            displayDocuments.sort((a, b) => a.compareTo(b));
-          }
-        });
-        break;
-      case FilterOptions.modifyDate:
-        break;
-      case FilterOptions.birthDate:
-        break;
-      default:
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -73,7 +51,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   void _setTypeIndex(int value) {
     setState(() {
-      _selectedType = 0;
+      _selectedType = value;
     });
   }
 
@@ -88,8 +66,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       _selectedOrder = value;
       if (_selectedOrder == 0) {
         displayDocuments.sort((a, b) => a.compareTo(b));
-      }
-      else {
+      } else {
         displayDocuments.sort((a, b) => b.compareTo(a));
       }
     });
@@ -112,8 +89,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                 orderindex: _setOrderIndex,
                 selectedFilter: _selectedFilter,
                 selectedOrder: _selectedOrder,
-                selectedType: _selectedType)
-          );
+                selectedType: _selectedType));
       });
     }
 
@@ -208,32 +184,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             if (displayMenu) {closeMenu()} else {openMenu()}
                           },
                       child: Icon(Icons.menu,
-                          size: 28, color: Colors.blueAccent.withOpacity(0.5))),
-                  // PopupMenuButton(
-                  //   position: PopupMenuPosition.under,
-                  //   splashRadius: 1.0,
-                  //   onSelected: _onSelectedSort,
-                  //   shape: RoundedRectangleBorder(
-                  //     borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  //   ),
-                  //   itemBuilder: (BuildContext context) =>
-                  //       <PopupMenuEntry<FilterOptions>>[
-                  //     const PopupMenuItem<FilterOptions>(
-                  //       value: FilterOptions.name,
-                  //       child: Text('Name'),
-                  //     ),
-                  //     const PopupMenuItem<FilterOptions>(
-                  //       value: FilterOptions.modifyDate,
-                  //       child: Text('Modify Date'),
-                  //     ),
-                  //     const PopupMenuItem<FilterOptions>(
-                  //       value: FilterOptions.birthDate,
-                  //       child: Text('Create Date'),
-                  //     ),
-                  //   ],
-                  //   icon: Icon(Icons.menu,
-                  //       size: 28, color: Colors.blueAccent.withOpacity(0.5)),
-                  // )
+                          size: 28, color: Colors.blueAccent.withOpacity(0.5)))
                 ],
               )
             ],
@@ -241,14 +192,14 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         ),
         // documents listviews
         Expanded(
-          flex: 5,
-          child: DocumentsListView(
-            documentsList: displayDocuments,
-            type: _selectedType,
-            filter: _selectedFilter,
-            order: _selectedOrder,
-            isDescending: true,
-          ),
+            flex: 5,
+            child: _selectedType == 0
+                ? DocumentsListView(
+                    documentsList: displayDocuments,
+                  )
+                : DocumentsGridView(
+                  documentsList: displayDocuments
+                )
         )
       ],
     );
