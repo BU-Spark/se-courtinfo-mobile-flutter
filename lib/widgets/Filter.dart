@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class OverlayClass extends StatefulWidget {
+class Filter extends StatefulWidget {
   final ValueSetter<int> typeindex;
   final ValueSetter<int> filterindex;
   final ValueSetter<int> orderindex;
@@ -9,7 +9,7 @@ class OverlayClass extends StatefulWidget {
   final int selectedOrder;
   final int selectedType;
 
-  OverlayClass(
+  Filter(
       {required this.typeindex,
       required this.filterindex,
       required this.orderindex,
@@ -21,7 +21,7 @@ class OverlayClass extends StatefulWidget {
   _OverlayClassState createState() => _OverlayClassState();
 }
 
-class _OverlayClassState extends State<OverlayClass> {
+class _OverlayClassState extends State<Filter> {
   late Size buttonSize;
   late Offset buttonPosition;
   late double screenWidth;
