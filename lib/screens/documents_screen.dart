@@ -189,7 +189,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            String newName = name;
+                            String newName = name == "" ? "Untitled Folder" : name;
                             int i = 1;
                             while (folder.checkDuplicateName(newName)) {
                               newName = name + " " + i.toString();
