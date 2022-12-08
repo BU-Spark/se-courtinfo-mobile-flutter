@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "/",
+      initialRoute: "/login",
       routes: {
         "/": (context) => LoadingScreen(),
         LoginScreen.routeName: (context) => LoginScreen(
