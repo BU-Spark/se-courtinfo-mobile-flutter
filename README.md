@@ -54,8 +54,8 @@ Keep in mind that scalability is not the first foremost factor to take into cons
 There are some comments (ex: `// TODO: ...`) throughout the codebase that note tasks that are needed to be completed. Here are a few to take note of: 
 
 - [x] document screen
-  - [ ] directory logic (folder & document creation logic)
-  - [ ] sorting logic
+  - [x] directory logic (folder & document creation logic)
+  - [x] sorting logic
   - [ ] querying documents from backend
   - [x] search logic
 - [x] camera screen
