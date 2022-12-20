@@ -127,6 +127,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
           print(value);
         });
         if (res.statusCode == 200) {
+          //TODO: Add the logic after statusCode failed or success
           print('uploaded');
         } else {
           print('failed');
@@ -138,7 +139,7 @@ class _DisplayPhotoScreenState extends State<DisplayPhotoScreen> {
 
     //Uploading function
     void _uploadImage() async {
-      print('continue');
+     
 
       Uri uri = HttpService.apiAddress("/token");
       try {
