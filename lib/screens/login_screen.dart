@@ -7,6 +7,7 @@ import 'package:scdao_mobile/screens/signup_screen.dart';
 import 'package:scdao_mobile/services/user.dart';
 import 'package:scdao_mobile/widgets/auth_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 class LoginScreen extends StatefulWidget {
   late final SharedPreferences prefs;
@@ -95,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } on Exception catch (e, s) {
       setState(() {
+        debugPrint('exception_login_screen: $e');
         _errorUserMsg = "There is an error, please try again later!";
         _isLoading = false;
       });

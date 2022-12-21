@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:scdao_mobile/services/service.dart';
 import 'package:http/http.dart' as http;
 import '../models/user.dart';
+import 'package:flutter/foundation.dart';
 
-class UserService extends HttpService {
+class UserService {
   Future<UserModel?> login(String username, String password) async {
     Map<String, String> formParams = <String, String>{
       "username": username.trim(),
@@ -14,7 +15,9 @@ class UserService extends HttpService {
       "Content-Type": "application/x-www-form-urlencoded",
       "accept": "application/json",
     };
-    Uri uri = apiAddress("/token");
+    Uri uri = HttpService.apiAddress("/token");
+    debugPrint('exception_login_screen: $uri');
+
     print(uri.toString());
     final http.Response res = await http.post(
       uri,
@@ -45,7 +48,7 @@ class UserService extends HttpService {
     Map<String, String> headers = <String, String>{
       "content-type": "application/x-www-form-urlencoded"
     };
-    Uri uri = apiAddress("/signup");
+    Uri uri = HttpService.apiAddress("/signup");
     final http.Response res = await http.post(
       uri,
       headers: headers,

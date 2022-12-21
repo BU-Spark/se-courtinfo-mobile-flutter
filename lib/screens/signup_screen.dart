@@ -21,8 +21,7 @@ final signupRepositoryProvider =
     Provider<SignupRepository>((ref) => SignupRepository());
 
 class SignupRepository {
-  // var url = Uri.parse("http://192.168.0.44:8888/api/signup");
-  var url = Uri.parse("http://192.168.0.4/api/signup");
+  var url = Uri.parse("http://192.168.1.104/api/signup");
   Future<http.Response> signup(String username, String password) async {
     Map<String, String> bodyParams = new Map();
     bodyParams["username"] = username;
