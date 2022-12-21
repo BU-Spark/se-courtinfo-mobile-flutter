@@ -13,6 +13,7 @@
   - [SUM'22 UI Design](#sum22-ui-design)
   - [SUM'22 Flutter Application](#sum22-flutter-application)
     - [Cropping Photos UX flow](#cropping-photos-ux-flow)
+  - [FALL'22 Flutter Application](#fall22-flutter-application)
 
 ## Getting Started
 To get started follow these steps:
@@ -54,8 +55,8 @@ Keep in mind that scalability is not the first foremost factor to take into cons
 There are some comments (ex: `// TODO: ...`) throughout the codebase that note tasks that are needed to be completed. Here are a few to take note of: 
 
 - [x] document screen
-  - [ ] directory logic (folder & document creation logic)
-  - [ ] sorting logic
+  - [x] directory logic (folder & document creation logic)
+  - [x] sorting logic
   - [ ] querying documents from backend
   - [x] search logic
 - [x] camera screen
@@ -99,3 +100,23 @@ Most of Flutter widgets are based of the Material design by Google, which is why
    Display photos screen &#8594; Press "Retake button" (deletes the current photo) &#8594; Camera screen
 
 ![copping_photos_ux_flow](https://user-images.githubusercontent.com/52475722/190462137-20411110-6fe0-40cf-b953-421a5b5b9c4c.gif)
+
+### FALL'22 Flutter Application
+1. <b>Document Screen</b>
+
+  - Sort via name, modify date, create date and type. 
+  - View files in ascending and descending order.
+  - View files in list view and grid view.
+  - Create folders and sort folders in same order as files. 
+  
+2. <b>Camera Screen</b>
+
+  - Added the flash function.
+  - Added a title. 
+  
+3. <b>Sign-up Screen & Login Screen</b>
+
+  - Connected to backend to sync user data between client and database. 
+
+#### Video Demo
+[![Demo Video](https://img.youtube.com/vi/bBIdEcxFX9k/0.jpg)](https://www.youtube.com/watch?v=bBIdEcxFX9k)
