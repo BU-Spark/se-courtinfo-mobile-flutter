@@ -1,19 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../constants.dart';
 
 class BottomNav extends StatelessWidget {
-  const BottomNav({super.key});
+  const BottomNav({super.key, required this.child});
+  final Widget child;
+
   @override
   Widget build(BuildContext context) {
-    final String? routeName = ModalRoute.of(context)!.settings.name;
+    final String routeName = GoRouter.of(context).location;
     final Size size = MediaQuery.of(context).size;
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      child: Container(
+    return Scaffold(
+      body: child,
+      bottomNavigationBar: SizedBox(
         width: size.width,
         height: 80,
         child: Stack(
@@ -30,7 +32,7 @@ class BottomNav extends StatelessWidget {
                   offset: const Offset(0, -40),
                   child: FloatingActionButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/camera');
+                      GoRouter.of(context).goNamed('camera');
                     },
                     backgroundColor: kPrimaryColor,
                     elevation: 0.1,
@@ -50,12 +52,11 @@ class BottomNav extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.topic,
                           size: 40,
-                          color:
-                              routeName == '/' || routeName == 'DocumentScreen'
-                                  ? kPrimaryColor
-                                  : kSecondaryColor),
+                          color: routeName == '/home'
+                              ? kPrimaryColor
+                              : kSecondaryColor),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/');
+                        GoRouter.of(context).goNamed('home');
                       },
                     ),
                     IconButton(
@@ -65,7 +66,7 @@ class BottomNav extends StatelessWidget {
                               ? kPrimaryColor
                               : kSecondaryColor),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/settings');
+                        GoRouter.of(context).goNamed('settings');
                       },
                     )
                   ],

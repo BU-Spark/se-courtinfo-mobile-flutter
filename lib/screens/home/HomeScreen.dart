@@ -2,21 +2,19 @@ import 'package:courtinfo_spark/components/BottomNav.dart';
 import 'package:courtinfo_spark/constants.dart';
 import 'package:courtinfo_spark/screens/home/components/Body.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
       body: const Stack(
         children: <Widget>[
           Body(),
-          BottomNav(),
+          // BottomNav(),
         ],
       ),
     );

@@ -16,7 +16,7 @@ class SettingScreen extends StatelessWidget {
       body: const Stack(
         children: <Widget>[
           Body(),
-          BottomNav(),
+          // BottomNav(),
         ],
       ),
     );
