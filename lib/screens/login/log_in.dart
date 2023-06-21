@@ -91,6 +91,7 @@ class _LoginState extends State<Login> {
                   ),
                   controller:
                       index == 0 ? _emailController : _passwordController,
+                  obscureText: index == 1,
                   placeholder: holder,
                   placeholderStyle: CupertinoTheme.of(context)
                       .textTheme

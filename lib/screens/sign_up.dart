@@ -25,12 +25,11 @@ class _SignUpState extends State<SignUp> {
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-List<Widget> forms = [];
+  List<Widget> forms = [];
   int index = 0;
 //   TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 20.0);
 //   TextStyle linkStyle = TextStyle(color: Colors.yellow);
 
-  
   Widget sliders(double height, double width, String title, String question,
       String holder, String error) {
     return Align(
@@ -95,6 +94,7 @@ List<Widget> forms = [];
                   ),
                   controller:
                       index == 0 ? _emailController : _passwordController,
+                  obscureText: index == 1,
                   placeholder: holder,
                   placeholderStyle: CupertinoTheme.of(context)
                       .textTheme
@@ -434,7 +434,7 @@ List<Widget> forms = [];
           children: [
             // "You are all set"
             Container(
-               margin:  const EdgeInsets.fromLTRB(0, 220, 9, 9),
+              margin: const EdgeInsets.fromLTRB(0, 220, 9, 9),
               child: const Text(
                 "You're all set 🎉",
                 style: TextStyle(
@@ -449,7 +449,8 @@ List<Widget> forms = [];
               child: const Text(
                 "Please contact Spark! for more information",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 91, 89, 89), // Change the text color to red
+                  color: Color.fromARGB(
+                      255, 91, 89, 89), // Change the text color to red
                   fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
