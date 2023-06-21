@@ -13,8 +13,8 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
-      body: const Stack(
-        children: <Widget>[
+      body: Stack(
+        children: const <Widget>[
           Body(),
           // BottomNav(),
         ],

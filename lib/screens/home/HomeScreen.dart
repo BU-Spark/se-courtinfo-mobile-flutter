@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: buildAppBar(context),
-      body: const Stack(
+      body: Stack(
         children: <Widget>[
           Body(),
           // BottomNav(),

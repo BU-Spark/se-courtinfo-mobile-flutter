@@ -1,8 +1,10 @@
 import 'package:courtinfo_spark/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; 
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
+  // String fstName = context.read<SignUp>().nameSlider(),
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +13,18 @@ class UserProfile extends StatelessWidget {
       width: size.width,
       height: 120,
       color: Colors.white,
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 30,
               backgroundColor: kPrimaryColor,
               child: Text(
-                "JA",
+                "JA", 
+                // Text('The name is ${context.watch<SignUp>()._fstName})')
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -35,16 +38,16 @@ class UserProfile extends StatelessWidget {
               children: [
                 Text(
                   "John Appleseed",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: kPrimaryColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   "District Attorney of Massachusetts",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: kSecondaryColor,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -52,7 +55,7 @@ class UserProfile extends StatelessWidget {
                 ),
               ],
             ),
-            Icon(Icons.arrow_forward_ios, color: kPrimaryColor),
+            const Icon(Icons.arrow_forward_ios, color: kPrimaryColor),
           ],
         ),
       ),
