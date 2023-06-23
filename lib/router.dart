@@ -1,10 +1,9 @@
 import 'package:courtinfo_spark/components/BottomNav.dart';
 import 'package:courtinfo_spark/screens/camera/CameraScreen.dart';
 import 'package:courtinfo_spark/screens/home/HomeScreen.dart';
-import 'package:courtinfo_spark/screens/login/login_screen.dart';
 import 'package:courtinfo_spark/screens/settings/SettingScreen.dart';
 import 'package:courtinfo_spark/screens/login/log_in.dart';
-import 'package:courtinfo_spark/screens/sign_up.dart';
+import 'package:courtinfo_spark/screens/signup/sign_up.dart';
 import 'package:courtinfo_spark/main.dart';
 
 import 'package:flutter/material.dart';

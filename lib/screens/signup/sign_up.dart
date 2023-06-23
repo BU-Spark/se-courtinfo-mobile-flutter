@@ -1,19 +1,26 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:developer';
 import '../../utility/sliders/generalSlider.dart';
+import '../../utility/sliders/nameSlider.dart';
+import '../../utility/sliders/doneSlider.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+// class SignUp with ChangeNotifier
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
   @override
   // ignore: library_private_types_in_public_api
-  _LoginState createState() => _LoginState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   // Controllers for the text fields
   final PageController _pageController = PageController(initialPage: 0);
-  final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   late List<Sliders> _sliderWidgets;
 
   @override
@@ -42,9 +49,23 @@ class _LoginState extends State<Login> {
           title: "Creating your account",
           question: "Create your password",
           holder: "Password",
-          error: "Please make sure that you enter the correct password",
+          error: "Please enter the correct password",
           controller: _passwordController,
           pageController: _pageController),
+      nameSlider(
+          height: height,
+          width: width,
+          title: "Creating your account",
+          question: "What's your name?",
+          fst_title: "First Name",
+          fst_holder: "Bob",
+          last_title: "Last Name",
+          last_holder: "Joe",
+          error: "Please enter all the fields",
+          firstNameController: _firstNameController,
+          lastNameController: _lastNameController,
+          pageController: _pageController),
+      doneSlider(height: height, width: width)
     ];
     return GestureDetector(
       onTap: () {
