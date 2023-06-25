@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'dart:developer';
+import '../../providers/auth_provider.dart';
 import '../../utility/sliders/generalSlider.dart';
 import '../../utility/sliders/nameSlider.dart';
 import '../../utility/sliders/doneSlider.dart';
@@ -31,6 +33,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     List<Widget> _sliderWidgets = [
