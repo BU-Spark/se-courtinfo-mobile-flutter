@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../utility/app_url.dart';
 import '../utility/shared_pref.dart';
-// import 'package:http/http.dart';
-
+import 'package:http/http.dart' as http;
 
 enum Status {
   NotLoggedIn,
@@ -40,28 +39,29 @@ class AuthProvider extends ChangeNotifier {
       'password': password
     };
 
-    return await post(
-      AppUrl.register,
-      body: json.encode(apiBodyData),
-      headers: {'Content-Type':'application/json'}
-    ).then(onValue)
-    .catchError(onError);
+    final Uri registerUri = Uri.parse(AppUrl.register);
+
+    final response = await http.post(registerUri,
+        body: json.encode(apiBodyData),
+        headers: {'Content-Type': 'application/json'});
+    // .then(onValue)
+    // .catchError(onError);
+
+    return onValue(response);
   }
 
-
-  notify(){
+  notify() {
     notifyListeners();
   }
 
-  static Future<FutureOr> onValue (Response response) async {
-    var result ;
+  Future<Map<String, dynamic>> onValue(http.Response response) async {
+    var result;
 
     final Map<String, dynamic> responseData = json.decode(response.body);
 
     print(responseData);
 
-    if(response.statusCode == 200){
-
+    if (response.statusCode == 200) {
       var userData = responseData['data'];
 
       //create a user model
@@ -71,23 +71,21 @@ class AuthProvider extends ChangeNotifier {
       UserPreferences().saveUser(authUser);
 
       result = {
-        'status':true,
-        'message':'Successfully registered',
-        'data':authUser
+        'status': true,
+        'message': 'Successfully registered',
+        'data': authUser
       };
-
-    }else{
+    } else {
       result = {
-        'status':false,
-        'message':'Successfully registered',
-        'data':responseData
+        'status': false,
+        'message': 'Successfully registered',
+        'data': responseData
       };
     }
     return result;
   }
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-
     var result;
 
     final Map<String, dynamic> loginData = {
@@ -98,18 +96,19 @@ class AuthProvider extends ChangeNotifier {
     _loggedInStatus = Status.Authenticating;
     notifyListeners();
 
-    Response response = await post(
-      AppUrl.login,
+    Uri loginUri = Uri.parse(AppUrl.login);
+
+    http.Response response = await http.post(
+      loginUri,
       body: json.encode(loginData),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Basic ZGlzYXBpdXNlcjpkaXMjMTIz',
-        'X-ApiKey' : 'ZGlzIzEyMw=='
+        'X-ApiKey': 'ZGlzIzEyMw=='
       },
     );
 
     if (response.statusCode == 200) {
-
       final Map<String, dynamic> responseData = json.decode(response.body);
 
       print(responseData);
@@ -124,7 +123,6 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
 
       result = {'status': true, 'message': 'Successful', 'user': authUser};
-
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
@@ -135,18 +133,10 @@ class AuthProvider extends ChangeNotifier {
     }
 
     return result;
-
   }
 
-
-  static onError(error){
+  static onError(error) {
     print('the error is ${error.detail}');
-    return {
-      'status':false,
-      'message':'Unsuccessful Request',
-      'data':error
-    };
+    return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
-
-
 }

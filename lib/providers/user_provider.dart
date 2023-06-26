@@ -3,7 +3,13 @@ import '../models/user.dart';
 
 class UserProvider extends ChangeNotifier{
 
-  User _user = User();
+   User _user = User(
+    userId: 0,
+    name: '',
+    email: '',
+    type: '',
+    token: '',
+  );
 
   User get user => _user;
 

@@ -3,15 +3,20 @@ import '../router.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/user_provider.dart';
 
 void main() {
   runApp(
-    //  MultiProvider(
-    // providers:[ChangeNotifierProvider(create: (_) => SignUp())],
-    //   child: const MyApp(),
-    // ),
-    const MyApp());
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -112,7 +117,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       margin: const EdgeInsets.fromLTRB(0, 0, 33, 0),
                       child: FloatingActionButton.extended(
                           onPressed: () => {context.goNamed('signup')},
-                           heroTag: 'signup_tag',
+                          heroTag: 'signup_tag',
                           label: const Text('Sign up'),
                           backgroundColor: const Color(0xff1f2c5c)),
                     ),
@@ -120,20 +125,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     Container(
                       margin: const EdgeInsets.fromLTRB(0, 0, 33, 0),
                       child: FloatingActionButton.extended(
-                         heroTag: 'login_tag',
+                          heroTag: 'login_tag',
                           onPressed: () => {context.goNamed('login')},
                           label: const Text('Log in'),
                           backgroundColor: const Color(0xff1f2c5c)),
                     ),
-                    // Main page button
-                    // Container(
-                    //   margin: const EdgeInsets.fromLTRB(0, 0, 33, 0),
-                    //   child: FloatingActionButton.extended(
-                    //      heroTag: 'home_tage',
-                    //       onPressed: () => {context.goNamed('home')},
-                    //       label: const Text('Main page'),
-                    //       backgroundColor: const Color(0xff1f2c5c)),
-                    // ),
                   ],
                 ),
               ),
