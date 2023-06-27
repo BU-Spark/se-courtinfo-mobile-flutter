@@ -103,8 +103,7 @@ class AuthProvider extends ChangeNotifier {
       body: json.encode(loginData),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ZGlzYXBpdXNlcjpkaXMjMTIz',
-        'X-ApiKey': 'ZGlzIzEyMw=='
+        // 'Authorization': 'Basic ZGlzYXBpdXNlcjpkaXMjMTIz'
       },
     );
 

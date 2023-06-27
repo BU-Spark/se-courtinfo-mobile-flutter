@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import '../validator.dart';
 
 class Sliders extends StatefulWidget {
   final double height;
@@ -166,7 +167,8 @@ class _SlidersState extends State<Sliders> {
                 ),
                 onPressed: () {
                   final inputText = widget.controller.text.trim();
-                  if (inputText.isEmpty) {
+                  // validate if email format is right
+                  if (inputText.isEmpty || (widget.question.contains('email')  && !Validator.validateEmail(inputText)) ) {
                     setState(() {
                       warning = widget.error;
                     });

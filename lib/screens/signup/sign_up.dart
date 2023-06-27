@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer';
 import '../../providers/auth_provider.dart';
@@ -17,6 +18,11 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
+
+  final formKey = GlobalKey<FormState>();
+
+  var _email, _password, _name;
   // Controllers for the text fields
   final PageController _pageController = PageController(initialPage: 0);
   final _emailController = TextEditingController();
@@ -25,9 +31,9 @@ class _SignUpState extends State<SignUp> {
   final _lastNameController = TextEditingController();
 
   // parameters for Provider
-  final _email = "";
-  final _password = "";
-  final _name = "";
+  // final _email = "";
+  // final _password = "";
+  // final _name = "";
 
   late List<Sliders> _sliderWidgets;
 
@@ -39,7 +45,18 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    AuthProvider auth = Provider.of<AuthProvider>(context);
+    // AuthProvider auth = Provider.of<AuthProvider>(context);
+
+    var loading = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const <Widget>[
+        CircularProgressIndicator(),
+        Text(" Registering ... Please wait")
+      ],
+    );
+
+    // Alternative: Place the doRegister() here...
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     List<Widget> _sliderWidgets = [
@@ -49,11 +66,11 @@ class _SignUpState extends State<SignUp> {
           title: "Creating your account",
           question: "What is your email?",
           holder: "bob@example.com",
-          error: "Please enter your email address",
+          error: "Please enter your email address correctly",
           controller: _emailController,
           pageController: _pageController,
-          onNextPressed: (_email){
-             print('Email: $_email');
+          onNextPressed: (_email) {
+            print('Email: $_email');
           }),
       Sliders(
           height: height,
@@ -64,10 +81,9 @@ class _SignUpState extends State<SignUp> {
           error: "Please enter the correct password",
           controller: _passwordController,
           pageController: _pageController,
-          onNextPressed: (_password){
-             print('Password: $_password');
-          }
-          ),
+          onNextPressed: (_password) {
+            print('Password: $_password');
+          }),
       nameSlider(
           height: height,
           width: width,
@@ -81,27 +97,61 @@ class _SignUpState extends State<SignUp> {
           fstNameController: _firstNameController,
           lastNameController: _lastNameController,
           pageController: _pageController,
-          onNextPressed: (_name){
-             print('Name: $_name');
+          onNextPressed: (_name) {
+            print('Name: $_name');
           }),
       doneSlider(height: height, width: width)
     ];
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: WillPopScope(
-        onWillPop: () async => false,
-        child: Scaffold(
-          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-          body: PageView(
-            controller: _pageController,
-            physics:
-                const NeverScrollableScrollPhysics(), // Disable swipe navigation
-            children: _sliderWidgets,
-          ),
-        ),
+
+    return ChangeNotifierProvider(
+      create: (_) => AuthProvider(), // Create an instance of AuthProvider
+      child: Consumer<AuthProvider>(
+        builder: (context, auth, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: WillPopScope(
+              onWillPop: () async => false,
+              child: Scaffold(
+                backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+                body: PageView(
+                  controller: _pageController,
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Disable swipe navigation
+                  children: _sliderWidgets,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
+
+
+//     var doRegister = (){
+//           print('on doRegister');
+
+//       final form = formKey.currentState;
+//       if(form.validate()){
+
+//         form.save();
+
+//         auth.loggedInStatus = Status.Authenticating;
+//         auth.notify();
+
+//         Future.delayed(loginTime).then((_) {
+//           Navigator.pushReplacementNamed(context, '/login');
+//           auth.loggedInStatus = Status.LoggedIn;
+//           auth.notify();
+//         });
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//   SnackBar(
+//     content: Text('Invalid form. Please complete the form properly'),
+//     duration: Duration(seconds: 10), // Adjust the duration as needed
+//   ),
+// );
+//     };
