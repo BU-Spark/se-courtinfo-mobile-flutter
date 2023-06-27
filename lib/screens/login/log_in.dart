@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../utility/sliders/generalSlider.dart';
+import '../../providers/auth_provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -35,7 +36,10 @@ class _LoginState extends State<Login> {
           holder: "bob@example.com",
           error: "Please enter your email address",
           controller: _emailController,
-          pageController: _pageController),
+          pageController: _pageController,
+          onNextPressed: (_email) {
+            print('Email: $_email');
+          }),
       Sliders(
           height: height,
           width: width,
@@ -44,7 +48,10 @@ class _LoginState extends State<Login> {
           holder: "Password",
           error: "Please make sure that you enter the correct password",
           controller: _passwordController,
-          pageController: _pageController),
+          pageController: _pageController,
+          onNextPressed: (_password) {
+            print('Password: $_password');
+          }),
     ];
     return GestureDetector(
       onTap: () {

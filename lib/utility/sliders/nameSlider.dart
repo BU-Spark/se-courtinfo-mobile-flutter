@@ -12,9 +12,10 @@ class nameSlider extends StatefulWidget {
   final String last_title;
   final String last_holder;
   final String error;
-  final TextEditingController firstNameController;
+  final TextEditingController fstNameController;
   final TextEditingController lastNameController;
   final PageController pageController;
+  final Function(String) onNextPressed;
 
   nameSlider({
     required this.height,
@@ -26,9 +27,10 @@ class nameSlider extends StatefulWidget {
     required this.last_title,
     required this.last_holder,
     required this.error,
-    required this.firstNameController,
+    required this.fstNameController,
     required this.lastNameController,
     required this.pageController,
+    required this.onNextPressed,
   });
 
   @override
@@ -113,7 +115,7 @@ class _NameSliderState extends State<nameSlider> {
                       width: 1.0,
                     ),
                   ),
-                  controller: widget.firstNameController,
+                  controller: widget.fstNameController,
                   placeholder: widget.fst_holder,
                   placeholderStyle: CupertinoTheme.of(context)
                       .textTheme
@@ -232,17 +234,20 @@ class _NameSliderState extends State<nameSlider> {
                         const Color(0xff1f2c5c), // Background color
                   ),
                   onPressed: () {
-                    if (widget.firstNameController.text.isEmpty ||
+                    if (widget.fstNameController.text.isEmpty ||
                         widget.lastNameController.text.isEmpty) {
                       warning = widget.error;
                       setState(() {
                         warning = widget.error;
                       });
                     } else {
+                      final inputText =
+                          "${widget.fstNameController.text.trim()} ${widget.lastNameController.text.trim()}";
                       setState(() {
-                      warning = '';
-                    });
+                        warning = '';
+                      });
                       // notifyListeners();
+                      widget.onNextPressed(inputText);
                       widget.pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.ease,

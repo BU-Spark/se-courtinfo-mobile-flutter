@@ -23,6 +23,12 @@ class _SignUpState extends State<SignUp> {
   final _passwordController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+
+  // parameters for Provider
+  final _email = "";
+  final _password = "";
+  final _name = "";
+
   late List<Sliders> _sliderWidgets;
 
   @override
@@ -45,7 +51,10 @@ class _SignUpState extends State<SignUp> {
           holder: "bob@example.com",
           error: "Please enter your email address",
           controller: _emailController,
-          pageController: _pageController),
+          pageController: _pageController,
+          onNextPressed: (_email){
+             print('Email: $_email');
+          }),
       Sliders(
           height: height,
           width: width,
@@ -54,7 +63,11 @@ class _SignUpState extends State<SignUp> {
           holder: "Password",
           error: "Please enter the correct password",
           controller: _passwordController,
-          pageController: _pageController),
+          pageController: _pageController,
+          onNextPressed: (_password){
+             print('Password: $_password');
+          }
+          ),
       nameSlider(
           height: height,
           width: width,
@@ -65,9 +78,12 @@ class _SignUpState extends State<SignUp> {
           last_title: "Last Name",
           last_holder: "Joe",
           error: "Please enter all the fields",
-          firstNameController: _firstNameController,
+          fstNameController: _firstNameController,
           lastNameController: _lastNameController,
-          pageController: _pageController),
+          pageController: _pageController,
+          onNextPressed: (_name){
+             print('Name: $_name');
+          }),
       doneSlider(height: height, width: width)
     ];
     return GestureDetector(

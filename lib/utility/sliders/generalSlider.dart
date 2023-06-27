@@ -11,6 +11,7 @@ class Sliders extends StatefulWidget {
   final String error;
   final TextEditingController controller;
   final PageController pageController;
+  final Function(String) onNextPressed;
 
   Sliders({
     required this.height,
@@ -21,6 +22,7 @@ class Sliders extends StatefulWidget {
     required this.error,
     required this.controller,
     required this.pageController,
+    required this.onNextPressed,
   });
   @override
   // ignore: library_private_types_in_public_api
@@ -163,7 +165,8 @@ class _SlidersState extends State<Sliders> {
                   backgroundColor: const Color(0xff1f2c5c), // Background color
                 ),
                 onPressed: () {
-                  if (widget.controller.text.isEmpty) {
+                  final inputText = widget.controller.text.trim();
+                  if (inputText.isEmpty) {
                     setState(() {
                       warning = widget.error;
                     });
@@ -171,6 +174,7 @@ class _SlidersState extends State<Sliders> {
                     setState(() {
                       warning = '';
                     });
+                     widget.onNextPressed(inputText);
                     if (widget.pageController.page == 1 &&
                         widget.error.contains("you")) {
                       context.goNamed('home');

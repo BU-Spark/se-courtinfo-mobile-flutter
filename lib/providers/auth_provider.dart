@@ -89,8 +89,8 @@ class AuthProvider extends ChangeNotifier {
     var result;
 
     final Map<String, dynamic> loginData = {
-      'UserName': 'kaliakoirdeo379',
-      'Password': 'kaliakoirdeo379@2020'
+      'UserName': 'Molly Zhou',
+      'Password': '1q2w3e4r'
     };
 
     _loggedInStatus = Status.Authenticating;
