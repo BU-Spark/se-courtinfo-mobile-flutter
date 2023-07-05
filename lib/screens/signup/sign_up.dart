@@ -1,11 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer';
+import 'dart:async';
 import '../../providers/auth_provider.dart';
-import '../../utility/sliders/generalSlider.dart';
+import '../../utility/sliders/signup_slider.dart';
 import '../../utility/sliders/nameSlider.dart';
 import '../../utility/sliders/doneSlider.dart';
 
@@ -22,7 +21,7 @@ class _SignUpState extends State<SignUp> {
 
   final formKey = GlobalKey<FormState>();
 
-  var _email, _password, _name;
+  var _email, _password, _first_name, _last_name;
   // Controllers for the text fields
   final PageController _pageController = PageController(initialPage: 0);
   final _emailController = TextEditingController();
@@ -30,12 +29,7 @@ class _SignUpState extends State<SignUp> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
 
-  // parameters for Provider
-  // final _email = "";
-  // final _password = "";
-  // final _name = "";
-
-  late List<Sliders> _sliderWidgets;
+  late List<regSlider> _sliderWidgets;
 
   @override
   void dispose() {
@@ -43,10 +37,44 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+ Future<bool> onContinuePressed(String firstName, String lastName) async {
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  final email = _emailController.text.trim();
+  final password = _passwordController.text.trim();
+  
+  print('Email: $email');
+  print('Password: $password');
+  print('First Name: $firstName');
+  print('Last Name: $lastName');
+
+  // Use a Completer to handle the asynchronous signup process
+  Completer<bool> completer = Completer<bool>();
+
+  // Call the API signup method using the authProvider
+  authProvider.signup(email, password, firstName, lastName).then((success) {
+    // ignore: unrelated_type_equality_checks
+    if (success == true) {
+      // If signup is successful, complete the completer with true
+      print("Success sign up");
+      completer.complete(true);
+    } else {
+      print('Signup failed');
+      // If signup fails, complete the completer with false
+      completer.complete(false);
+    }
+  }).catchError((error) {
+    print('Signup error: $error');
+    // If there's an error, complete the completer with false
+    completer.complete(false);
+  });
+
+  // Return the future of the completer
+  return completer.future;
+}
+
+
   @override
   Widget build(BuildContext context) {
-    // AuthProvider auth = Provider.of<AuthProvider>(context);
-
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: const <Widget>[
@@ -60,7 +88,7 @@ class _SignUpState extends State<SignUp> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     List<Widget> _sliderWidgets = [
-      Sliders(
+      regSlider(
           height: height,
           width: width,
           title: "Creating your account",
@@ -70,9 +98,9 @@ class _SignUpState extends State<SignUp> {
           controller: _emailController,
           pageController: _pageController,
           onNextPressed: (_email) {
-            print('Email: $_email');
+            _email = _email;
           }),
-      Sliders(
+      regSlider(
           height: height,
           width: width,
           title: "Creating your account",
@@ -82,24 +110,22 @@ class _SignUpState extends State<SignUp> {
           controller: _passwordController,
           pageController: _pageController,
           onNextPressed: (_password) {
-            print('Password: $_password');
           }),
       nameSlider(
-          height: height,
-          width: width,
-          title: "Creating your account",
-          question: "What's your name?",
-          fst_title: "First Name",
-          fst_holder: "Bob",
-          last_title: "Last Name",
-          last_holder: "Joe",
-          error: "Please enter all the fields",
-          fstNameController: _firstNameController,
-          lastNameController: _lastNameController,
-          pageController: _pageController,
-          onNextPressed: (_name) {
-            print('Name: $_name');
-          }),
+        height: height,
+        width: width,
+        title: "Creating your account",
+        question: "What's your name?",
+        fst_title: "First Name",
+        fst_holder: "Bob",
+        last_title: "Last Name",
+        last_holder: "Joe",
+        error: "Please make sure to enter all the fields correctly",
+        fstNameController: _firstNameController,
+        lastNameController: _lastNameController,
+        pageController: _pageController,
+        onContinuePressed: onContinuePressed,
+      ),
       doneSlider(height: height, width: width)
     ];
 

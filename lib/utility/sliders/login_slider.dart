@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../validator.dart';
+import 'package:email_validator/email_validator.dart';
 
-class Sliders extends StatefulWidget {
+class loginSlider extends StatefulWidget {
   final double height;
   final double width;
   final String title;
@@ -12,9 +13,9 @@ class Sliders extends StatefulWidget {
   final String error;
   final TextEditingController controller;
   final PageController pageController;
-  final Function(String) onNextPressed;
+  final Future<bool> Function() onContinuePressed;
 
-  Sliders({
+  loginSlider({
     required this.height,
     required this.width,
     required this.title,
@@ -23,14 +24,14 @@ class Sliders extends StatefulWidget {
     required this.error,
     required this.controller,
     required this.pageController,
-    required this.onNextPressed,
+    required this.onContinuePressed,
   });
   @override
   // ignore: library_private_types_in_public_api
   _SlidersState createState() => _SlidersState();
 }
 
-class _SlidersState extends State<Sliders> {
+class _SlidersState extends State<loginSlider> {
   String warning = '';
 
   @override
@@ -168,7 +169,9 @@ class _SlidersState extends State<Sliders> {
                 onPressed: () {
                   final inputText = widget.controller.text.trim();
                   // validate if email format is right
-                  if (inputText.isEmpty || (widget.question.contains('email')  && !Validator.validateEmail(inputText)) ) {
+                  if (inputText.isEmpty ||
+                      (widget.question.contains('email') &&
+                          !Validator.validateEmail(inputText))) {
                     setState(() {
                       warning = widget.error;
                     });
@@ -176,10 +179,13 @@ class _SlidersState extends State<Sliders> {
                     setState(() {
                       warning = '';
                     });
-                     widget.onNextPressed(inputText);
-                    if (widget.pageController.page == 1 &&
-                        widget.error.contains("you")) {
-                      context.goNamed('home');
+                    if (widget.pageController.page == 1) {
+                      // Validate if user login info exists
+                      if (widget.onContinuePressed() == true){
+                        context.goNamed('home');
+                      } else {
+                        print('invalidate user info');
+                      }
                     } else {
                       widget.pageController.nextPage(
                         duration: const Duration(milliseconds: 300),

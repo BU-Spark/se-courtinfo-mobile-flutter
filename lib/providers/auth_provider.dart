@@ -33,17 +33,19 @@ class AuthProvider extends ChangeNotifier {
     _registeredInStatus = value;
   }
 
-  Future<Map<String, dynamic>> register(String email, String password) async {
+  Future<Map<String, dynamic>> signup(String email, String password, String first_name, String last_name) async {
     final Map<String, dynamic> apiBodyData = {
       'email': email,
-      'password': password
+      'password': password,
+      'first_name': first_name,
+      'last_name': last_name,
     };
 
     final Uri registerUri = Uri.parse(AppUrl.register);
 
     final response = await http.post(registerUri,
         body: json.encode(apiBodyData),
-        headers: {'Content-Type': 'application/json'});
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'});
     // .then(onValue)
     // .catchError(onError);
 
@@ -89,7 +91,7 @@ class AuthProvider extends ChangeNotifier {
     var result;
 
     final Map<String, dynamic> loginData = {
-      'UserName': 'Molly Zhou',
+      'email': 'jyanzhou@bu.edu',
       'Password': '1q2w3e4r'
     };
 
@@ -102,7 +104,7 @@ class AuthProvider extends ChangeNotifier {
       loginUri,
       body: json.encode(loginData),
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
         // 'Authorization': 'Basic ZGlzYXBpdXNlcjpkaXMjMTIz'
       },
     );

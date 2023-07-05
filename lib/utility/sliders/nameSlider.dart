@@ -15,7 +15,7 @@ class nameSlider extends StatefulWidget {
   final TextEditingController fstNameController;
   final TextEditingController lastNameController;
   final PageController pageController;
-  final Function(String) onNextPressed;
+  final Future<bool> Function(String, String) onContinuePressed;
 
   nameSlider({
     required this.height,
@@ -30,7 +30,7 @@ class nameSlider extends StatefulWidget {
     required this.fstNameController,
     required this.lastNameController,
     required this.pageController,
-    required this.onNextPressed,
+    required this.onContinuePressed,
   });
 
   @override
@@ -241,17 +241,21 @@ class _NameSliderState extends State<nameSlider> {
                         warning = widget.error;
                       });
                     } else {
-                      final inputText =
-                          "${widget.fstNameController.text.trim()} ${widget.lastNameController.text.trim()}";
+                      final fstName = widget.fstNameController.text.trim();
+                      final lastName = widget.lastNameController.text.trim();
                       setState(() {
                         warning = '';
                       });
-                      // notifyListeners();
-                      widget.onNextPressed(inputText);
-                      widget.pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
+                      // Validate User Info
+                      // ignore: unrelated_type_equality_checks
+                      if (widget.onContinuePressed(fstName, lastName) == true) {
+                        widget.pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.ease,
+                        );
+                      } else {
+                         warning = widget.error;
+                      }
                     }
                   },
                   child: const Text('Continue'),
