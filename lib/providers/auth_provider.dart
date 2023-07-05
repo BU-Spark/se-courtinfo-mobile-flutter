@@ -33,7 +33,8 @@ class AuthProvider extends ChangeNotifier {
     _registeredInStatus = value;
   }
 
-  Future<Map<String, dynamic>> signup(String email, String password, String first_name, String last_name) async {
+  Future<Map<String, dynamic>> signup(String email, String password,
+      String first_name, String last_name) async {
     final Map<String, dynamic> apiBodyData = {
       'email': email,
       'password': password,
@@ -90,9 +91,9 @@ class AuthProvider extends ChangeNotifier {
   Future<Map<String, dynamic>> login(String email, String password) async {
     var result;
 
-    final Map<String, dynamic> loginData = {
-      'email': 'jyanzhou@bu.edu',
-      'Password': '1q2w3e4r'
+    final Map<String, String> loginData = {
+      'username': email,
+      'password': password
     };
 
     _loggedInStatus = Status.Authenticating;
@@ -102,7 +103,7 @@ class AuthProvider extends ChangeNotifier {
 
     http.Response response = await http.post(
       loginUri,
-      body: json.encode(loginData),
+      body: loginData,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         // 'Authorization': 'Basic ZGlzYXBpdXNlcjpkaXMjMTIz'
