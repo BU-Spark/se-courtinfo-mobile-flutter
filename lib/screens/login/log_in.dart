@@ -40,10 +40,10 @@ class _LoginState extends State<Login> {
     // Call the API login method using the authProvider
     try {
       var success = await authProvider.login(email, password);
-      bool isSuccess = success['status'] as bool;
+      bool isSuccess = success['status'];
 
       if (isSuccess == true) {
-        print("Success login");
+        print("Successful login");
         return true;
       } else {
         print('Login failed');
@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
           title: "Log in",
           question: "Enter your password",
           holder: "Password",
-          error: "Please make sure that you enter the correct password",
+          error: "Please make sure that you enter the correct info",
           controller: _passwordController,
           pageController: _pageController,
           onContinuePressed: onContinuePressed),

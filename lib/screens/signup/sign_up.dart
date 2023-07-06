@@ -45,10 +45,10 @@ class _SignUpState extends State<SignUp> {
  // Call the API login method using the authProvider
     try {
       var success = await authProvider.signup(email, password, firstName, lastName);
-      bool isSuccess = success['status'] as bool;
+      bool isSuccess = success['status'];
 
       if (isSuccess == true) {
-        print("Success Sign up");
+        print("Successful registered");
         return true;
       } else {
         print('Sign up failed');

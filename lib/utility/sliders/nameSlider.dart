@@ -254,7 +254,9 @@ class _NameSliderState extends State<nameSlider> {
                           curve: Curves.ease,
                         );
                       } else {
-                         warning = widget.error;
+                         setState(() {
+                        warning = widget.error;
+                      });
                       }
                     }
                   },

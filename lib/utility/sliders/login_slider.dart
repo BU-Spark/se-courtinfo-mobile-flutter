@@ -185,8 +185,9 @@ class _SlidersState extends State<loginSlider> {
                       if (await widget.onContinuePressed()){
                         context.goNamed('home');
                       } else {
+                        setState(() {
                         warning = widget.error;
-                        print('invalidate user info');
+                      });
                       }
                     } else {
                       widget.pageController.nextPage(
