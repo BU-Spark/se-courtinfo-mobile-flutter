@@ -41,38 +41,24 @@ class _SignUpState extends State<SignUp> {
   final authProvider = Provider.of<AuthProvider>(context, listen: false);
   final email = _emailController.text.trim();
   final password = _passwordController.text.trim();
-  
-  print('Email: $email');
-  print('Password: $password');
-  print('First Name: $firstName');
-  print('Last Name: $lastName');
 
-  // Use a Completer to handle the asynchronous signup process
-  Completer<bool> completer = Completer<bool>();
+ // Call the API login method using the authProvider
+    try {
+      var success = await authProvider.signup(email, password, firstName, lastName);
+      bool isSuccess = success['status'] as bool;
 
-  // Call the API signup method using the authProvider
-  authProvider.signup(email, password, firstName, lastName).then((success) {
-    // ignore: unrelated_type_equality_checks
-    if (success == true) {
-      // If signup is successful, complete the completer with true
-      print("Success sign up");
-      completer.complete(true);
-    } else {
-      print('Signup failed');
-      // If signup fails, complete the completer with false
-      completer.complete(false);
+      if (isSuccess == true) {
+        print("Success Sign up");
+        return true;
+      } else {
+        print('Sign up failed');
+        return false;
+      }
+    } catch (error) {
+      print('Sign up error: $error');
+      return false;
     }
-  }).catchError((error) {
-    print('Signup error: $error');
-    // If there's an error, complete the completer with false
-    completer.complete(false);
-  });
-
-  // Return the future of the completer
-  return completer.future;
 }
-
-
   @override
   Widget build(BuildContext context) {
     var loading = Row(
@@ -155,29 +141,3 @@ class _SignUpState extends State<SignUp> {
     );
   }
 }
-
-
-//     var doRegister = (){
-//           print('on doRegister');
-
-//       final form = formKey.currentState;
-//       if(form.validate()){
-
-//         form.save();
-
-//         auth.loggedInStatus = Status.Authenticating;
-//         auth.notify();
-
-//         Future.delayed(loginTime).then((_) {
-//           Navigator.pushReplacementNamed(context, '/login');
-//           auth.loggedInStatus = Status.LoggedIn;
-//           auth.notify();
-//         });
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//   SnackBar(
-//     content: Text('Invalid form. Please complete the form properly'),
-//     duration: Duration(seconds: 10), // Adjust the duration as needed
-//   ),
-// );
-//     };

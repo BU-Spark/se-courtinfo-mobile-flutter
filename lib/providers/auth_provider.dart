@@ -35,18 +35,18 @@ class AuthProvider extends ChangeNotifier {
 
   Future<Map<String, dynamic>> signup(String email, String password,
       String first_name, String last_name) async {
-    final Map<String, dynamic> apiBodyData = {
-      'email': email,
+    final Map<String, String> apiBodyData = {
+      'username': email,
       'password': password,
-      'first_name': first_name,
-      'last_name': last_name,
     };
 
     final Uri registerUri = Uri.parse(AppUrl.register);
 
-    final response = await http.post(registerUri,
-        body: json.encode(apiBodyData),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'});
+    final response = await http.post(
+      registerUri,
+      body: apiBodyData,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    );
     // .then(onValue)
     // .catchError(onError);
 
@@ -62,27 +62,27 @@ class AuthProvider extends ChangeNotifier {
 
     final Map<String, dynamic> responseData = json.decode(response.body);
 
-    print(responseData);
-
     if (response.statusCode == 200) {
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       var userData = responseData['data'];
 
-      //create a user model
+      //create a user model and create shared preferences and save data
       User authUser = User.fromJson(responseData);
-
-      //then create shared preferences and save data
       UserPreferences().saveUser(authUser);
 
+      notifyListeners();
       result = {
         'status': true,
         'message': 'Successfully registered',
-        'data': authUser
+        'data': authUser,
       };
     } else {
       result = {
         'status': false,
         'message': 'Successfully registered',
-        'data': responseData
+        'data': responseData,
       };
     }
     return result;
@@ -113,27 +113,31 @@ class AuthProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
 
-      print(responseData);
+      // print('Response data: $responseData');
+      // print('Response Status Code: ${response.statusCode}');
+      // print('Response Body: ${response.body}');
 
       var userData = responseData['Content'];
 
-      User authUser = User.fromJson(userData);
-
+      //create a user model and create shared preferences and save data
+      User authUser = User.fromJson(responseData);
       UserPreferences().saveUser(authUser);
 
-      _loggedInStatus = Status.LoggedIn;
+      // _loggedInStatus = Status.LoggedIn;
       notifyListeners();
-
-      result = {'status': true, 'message': 'Successful', 'user': authUser};
+      result = {
+        'status': true,
+        'message': 'Successful',
+        'user': authUser,
+      };
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       notifyListeners();
       result = {
         'status': false,
-        'message': json.decode(response.body)['error']
+        'message': json.decode(response.body)['error'],
       };
     }
-
     return result;
   }
 

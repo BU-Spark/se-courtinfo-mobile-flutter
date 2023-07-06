@@ -166,7 +166,7 @@ class _SlidersState extends State<loginSlider> {
                   ),
                   backgroundColor: const Color(0xff1f2c5c), // Background color
                 ),
-                onPressed: () {
+                onPressed: () async {
                   final inputText = widget.controller.text.trim();
                   // validate if email format is right
                   if (inputText.isEmpty ||
@@ -181,9 +181,11 @@ class _SlidersState extends State<loginSlider> {
                     });
                     if (widget.pageController.page == 1) {
                       // Validate if user login info exists
-                      if (widget.onContinuePressed() == true){
+                      // ignore: unrelated_type_equality_checks
+                      if (await widget.onContinuePressed()){
                         context.goNamed('home');
                       } else {
+                        warning = widget.error;
                         print('invalidate user info');
                       }
                     } else {

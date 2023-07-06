@@ -36,32 +36,23 @@ class _LoginState extends State<Login> {
 
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
-    print(email);
-    print(password);
-
-    // Use a Completer to handle the asynchronous login process
-    Completer<bool> completer = Completer<bool>();
 
     // Call the API login method using the authProvider
-    authProvider.login(email, password).then((success) {
-      // ignore: unrelated_type_equality_checks
-      if (success == true) {
-        // If signup is successful, complete the completer with true
+    try {
+      var success = await authProvider.login(email, password);
+      bool isSuccess = success['status'] as bool;
+
+      if (isSuccess == true) {
         print("Success login");
-        completer.complete(true);
+        return true;
       } else {
         print('Login failed');
-        // If signup fails, complete the completer with false
-        completer.complete(false);
+        return false;
       }
-    }).catchError((error) {
+    } catch (error) {
       print('Login error: $error');
-      // If there's an error, complete the completer with false
-      completer.complete(false);
-    });
-
-    // Return the future of the completer
-    return completer.future;
+      return false;
+    }
   }
 
   @override
@@ -111,30 +102,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
-  //  var doLogin = () {
-  //     final form = formKey.currentState;
-  //     if (form.validate()) {
-  //       form.save();
-  //       final Future<Map<String, dynamic>> response = auth.login(_email, _password);
-  //       response.then((response) {
-  //         if (response['status']) {
-  //           User user = response['user'];
-  //           Provider.of<UserProvider>(context, listen: false).setUser(user);
-  //           Navigator.pushReplacementNamed(context, '/dashboard');
-  //         } else {
-  //           Flushbar(
-  //             title: "Failed Login",
-  //             message: response['message']['message'].toString(),
-  //             duration: Duration(seconds: 3),
-  //           ).show(context);
-  //         }
-  //       });
-  //     } else {
-  //       Flushbar(
-  //         title: 'Invalid form',
-  //         message: 'Please complete the form properly',
-  //         duration: Duration(seconds: 10),
-  //       ).show(context);
-  //     }
-  //   };

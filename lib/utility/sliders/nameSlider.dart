@@ -233,7 +233,7 @@ class _NameSliderState extends State<nameSlider> {
                     backgroundColor:
                         const Color(0xff1f2c5c), // Background color
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.fstNameController.text.isEmpty ||
                         widget.lastNameController.text.isEmpty) {
                       warning = widget.error;
@@ -248,7 +248,7 @@ class _NameSliderState extends State<nameSlider> {
                       });
                       // Validate User Info
                       // ignore: unrelated_type_equality_checks
-                      if (widget.onContinuePressed(fstName, lastName) == true) {
+                      if (await widget.onContinuePressed(fstName, lastName)) {
                         widget.pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.ease,
