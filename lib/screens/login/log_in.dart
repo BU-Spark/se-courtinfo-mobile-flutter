@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
       var success = await authProvider.login(email, password);
       bool isSuccess = success['status'];
 
-      if (isSuccess == true) {
+      if (isSuccess) {
         print("Successful login");
         return true;
       } else {

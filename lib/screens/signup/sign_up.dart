@@ -47,7 +47,7 @@ class _SignUpState extends State<SignUp> {
       var success = await authProvider.signup(email, password, firstName, lastName);
       bool isSuccess = success['status'];
 
-      if (isSuccess == true) {
+      if (isSuccess) {
         print("Successful registered");
         return true;
       } else {

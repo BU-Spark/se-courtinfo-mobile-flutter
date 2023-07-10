@@ -1,35 +1,23 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user.dart';
+import '../models/token.dart';
 
 class UserPreferences {
-  Future<bool> saveUser(User user) async {
+  Future<bool> saveUser(Token token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    prefs.setInt('userId', user.userId);
-    prefs.setString('first_name', user.first_name);
-    prefs.setString('last_name', user.last_name);
-    prefs.setString('email', user.email);
-    prefs.setString('type', user.tokenType);
-    prefs.setString('token', user.accessToken);
+    prefs.setString('type', token.tokenType);
+    prefs.setString('token', token.accessToken);
 
     return prefs.commit();
   }
 
-  Future<User> getUser() async {
+  Future<Token> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    int userId = prefs.getInt("userId") ?? 0;
-    String first_name = prefs.getString("first_name") ?? "";
-    String last_name = prefs.getString("last_name") ?? "";
-    String email = prefs.getString("email") ?? "";
     String type = prefs.getString("type") ?? "";
     String token = prefs.getString("token") ?? "";
 
-    return User(
-        userId: userId, 
-        first_name: first_name, 
-        last_name: last_name, 
-        email: email, 
+    return Token(
         tokenType: type, 
         accessToken: token);
   }
@@ -37,10 +25,6 @@ class UserPreferences {
   void removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    prefs.remove('userId');
-    prefs.remove('first_name');
-    prefs.remove('last_name');
-    prefs.remove('email');
     prefs.remove('type');
     prefs.remove('token');
   }
