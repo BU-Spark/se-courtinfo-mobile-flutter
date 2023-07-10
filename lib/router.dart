@@ -8,6 +8,8 @@ import 'package:courtinfo_spark/main.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'providers/auth_provider.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -20,6 +22,15 @@ final goRouter = GoRouter(
       name: 'welcome',
       path: '/',
       parentNavigatorKey: rootNavigatorKey,
+      redirect: (context,state) {
+        // Check if the user is logged in
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        if (authProvider.loggedInStatus == Status.LoggedIn) {
+          // Redirect to the home screen
+          return '/home';
+        }
+        return null; // Proceed with the default route handling
+      },
       builder: (context, state) => const WelcomeScreen(),
     ),
     GoRoute(

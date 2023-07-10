@@ -6,11 +6,14 @@ import 'package:flutter/src/painting/image_resolution.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 
-void main() {
+void main() async{
+  final authProvider = AuthProvider();
+  await authProvider.checkLoginStatus();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
       ],
       child: const MyApp(),
     ),

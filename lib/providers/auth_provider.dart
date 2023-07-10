@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/token.dart';
 import '../utility/app_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 enum Status {
   NotLoggedIn,
@@ -19,6 +20,7 @@ enum Status {
 class AuthProvider extends ChangeNotifier {
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
+   String? _loginToken;
 
   Status get loggedInStatus => _loggedInStatus;
 
@@ -30,6 +32,20 @@ class AuthProvider extends ChangeNotifier {
 
   set registeredInStatus(Status value) {
     _registeredInStatus = value;
+  }
+
+    String? get loginToken => _loginToken;
+
+    Future<void> checkLoginStatus() async {
+    // try to retrieve token if existed
+    final storedToken = await FlutterSecureStorage().read(key: 'login_token');
+    if (storedToken != null) {
+      _loginToken = storedToken;
+      _loggedInStatus = Status.LoggedIn;
+    } else {
+      _loggedInStatus = Status.NotLoggedIn;
+    }
+    notifyListeners();
   }
 
   Future<Map<String, dynamic>> signup(String email, String password,
@@ -100,9 +116,14 @@ class AuthProvider extends ChangeNotifier {
       // print('Response Body: ${response.body}');
 
       //create a token model
-      Token token = Token. fromJson(responseData);
+      Token token = Token.fromJson(responseData);
 
       _loggedInStatus = Status.LoggedIn;
+      _loginToken = token.token; // Store the login token
+      await FlutterSecureStorage().write(
+        key: 'login_token',
+        value: _loginToken,
+      ); // Store the token securely
       notifyListeners();
       result = {
         'status': true,
