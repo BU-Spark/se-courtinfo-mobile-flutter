@@ -14,4 +14,11 @@ class Token {
       accessToken: responseData['access_token'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token_type': tokenType,
+      'access_token': accessToken,
+    };
+  }
 }

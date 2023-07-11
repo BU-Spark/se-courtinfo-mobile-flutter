@@ -20,7 +20,7 @@ enum Status {
 class AuthProvider extends ChangeNotifier {
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
-   String? _loginToken;
+  Token? _loginToken;
 
   Status get loggedInStatus => _loggedInStatus;
 
@@ -34,13 +34,14 @@ class AuthProvider extends ChangeNotifier {
     _registeredInStatus = value;
   }
 
-    String? get loginToken => _loginToken;
+  Token? get loginToken => _loginToken;
 
-    Future<void> checkLoginStatus() async {
+  Future<void> checkLoginStatus() async {
     // try to retrieve token if existed
     final storedToken = await FlutterSecureStorage().read(key: 'login_token');
+    print('stored token:$storedToken');
     if (storedToken != null) {
-      _loginToken = storedToken;
+      _loginToken = Token.fromJson(json.decode(storedToken));
       _loggedInStatus = Status.LoggedIn;
     } else {
       _loggedInStatus = Status.NotLoggedIn;
@@ -71,7 +72,7 @@ class AuthProvider extends ChangeNotifier {
       // print('Response Body: ${response.body}');
 
       //create a token model
-      Token token= Token. fromJson(responseData);
+      Token token = Token.fromJson(responseData);
 
       notifyListeners();
       result = {
@@ -119,12 +120,11 @@ class AuthProvider extends ChangeNotifier {
       Token token = Token.fromJson(responseData);
 
       _loggedInStatus = Status.LoggedIn;
-      _loginToken = token.token; // Store the login token
+      _loginToken = token; // Store the login token
       await FlutterSecureStorage().write(
         key: 'login_token',
-        value: _loginToken,
+        value: json.encode(token.toJson()), 
       ); // Store the token securely
-      notifyListeners();
       result = {
         'status': true,
         'message': 'Successfully logged in',
@@ -132,12 +132,12 @@ class AuthProvider extends ChangeNotifier {
       };
     } else {
       _loggedInStatus = Status.NotLoggedIn;
-      notifyListeners();
       result = {
         'status': false,
         'message': json.decode(response.body)['error'],
       };
     }
+    notifyListeners();
     return result;
   }
 

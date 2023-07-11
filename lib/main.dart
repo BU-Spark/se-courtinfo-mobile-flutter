@@ -7,13 +7,14 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   final authProvider = AuthProvider();
   await authProvider.checkLoginStatus();
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+         ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
       ],
       child: const MyApp(),
     ),
