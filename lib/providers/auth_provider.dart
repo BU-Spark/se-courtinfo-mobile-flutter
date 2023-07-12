@@ -39,7 +39,7 @@ class AuthProvider extends ChangeNotifier {
   Future<void> checkLoginStatus() async {
     // try to retrieve token if existed
     final storedToken = await FlutterSecureStorage().read(key: 'login_token');
-    print('stored token:$storedToken');
+    print('stored token_read:$storedToken');
     if (storedToken != null) {
       _loginToken = Token.fromJson(json.decode(storedToken));
       _loggedInStatus = Status.LoggedIn;
@@ -125,6 +125,7 @@ class AuthProvider extends ChangeNotifier {
         key: 'login_token',
         value: json.encode(token.toJson()), 
       ); // Store the token securely
+      print('stored token_write:${json.encode(token.toJson())}');
       result = {
         'status': true,
         'message': 'Successfully logged in',

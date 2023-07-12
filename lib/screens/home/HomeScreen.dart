@@ -14,7 +14,6 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Body(),
-          // BottomNav(),
         ],
       ),
     );

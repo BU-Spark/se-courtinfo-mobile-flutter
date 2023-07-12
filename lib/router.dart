@@ -17,7 +17,12 @@ final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
 final goRouter = GoRouter(
   initialLocation: '/',
   navigatorKey: rootNavigatorKey,
-  redirect: (context, state) {
+  routes: [
+    GoRoute(
+      name: 'welcome',
+      path: '/',
+      parentNavigatorKey: rootNavigatorKey,
+      redirect: (context, state) {
         final authProvider = Provider.of<AuthProvider>(context, listen: false);
         print('login status: ${authProvider.loggedInStatus}');
         if (authProvider.loggedInStatus == Status.LoggedIn) {
@@ -25,11 +30,6 @@ final goRouter = GoRouter(
         }
         return null;
       },
-  routes: [
-    GoRoute(
-      name: 'welcome',
-      path: '/',
-      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const WelcomeScreen(),
     ),
     GoRoute(
