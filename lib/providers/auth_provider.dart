@@ -49,7 +49,7 @@ class AuthProvider extends ChangeNotifier {
         storedToken = null; 
       } else { //token expired
         _loggedInStatus = Status.NotLoggedIn;
-        storedToken = null; 
+        await FlutterSecureStorage().delete(key: 'login_token');
       }
     } else { //no login token found
       _loggedInStatus = Status.NotLoggedIn;
