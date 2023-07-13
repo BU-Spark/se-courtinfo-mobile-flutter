@@ -39,9 +39,11 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> checkLoginStatus() async {
     // try to retrieve token if existed
-    String? storedToken = await FlutterSecureStorage().read(key: 'login_token');
+    final storage = new FlutterSecureStorage();
+    String? storedToken = await storage.read(key: 'login_token');
     if (storedToken != null) {
       DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
+      // print('expiration date: $expirationDate');
       //check if the token is expired or not
       if (expirationDate.isAfter(DateTime.now())) { //still valid
         _loginToken = Token.fromJson(json.decode(storedToken));
@@ -49,7 +51,7 @@ class AuthProvider extends ChangeNotifier {
         storedToken = null; 
       } else { //token expired
         _loggedInStatus = Status.NotLoggedIn;
-        await FlutterSecureStorage().delete(key: 'login_token');
+        await storage.delete(key: 'login_token');
       }
     } else { //no login token found
       _loggedInStatus = Status.NotLoggedIn;
