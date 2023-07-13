@@ -6,6 +6,7 @@ import '../models/token.dart';
 import '../utility/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 enum Status {
   NotLoggedIn,
@@ -39,11 +40,16 @@ class AuthProvider extends ChangeNotifier {
   Future<void> checkLoginStatus() async {
     // try to retrieve token if existed
     final storedToken = await FlutterSecureStorage().read(key: 'login_token');
-    print('stored token_read:$storedToken');
     if (storedToken != null) {
-      _loginToken = Token.fromJson(json.decode(storedToken));
-      _loggedInStatus = Status.LoggedIn;
-    } else {
+      DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
+      //check if the token is expired or not
+      if (expirationDate.isAfter(DateTime.now())) { //still valid
+        _loginToken = Token.fromJson(json.decode(storedToken));
+        _loggedInStatus = Status.LoggedIn;
+      } else { //token expired
+        _loggedInStatus = Status.NotLoggedIn;
+      }
+    } else { //no login token found
       _loggedInStatus = Status.NotLoggedIn;
     }
     notifyListeners();
@@ -123,7 +129,7 @@ class AuthProvider extends ChangeNotifier {
       _loginToken = token; // Store the login token
       await FlutterSecureStorage().write(
         key: 'login_token',
-        value: json.encode(token.toJson()), 
+        value: json.encode(token.toJson()),
       ); // Store the token securely
       print('stored token_write:${json.encode(token.toJson())}');
       result = {

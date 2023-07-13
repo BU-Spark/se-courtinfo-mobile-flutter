@@ -63,8 +63,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  // bool flag_signup = false;
-  // bool flag_login = false;
 
   @override
   Widget build(BuildContext context) {
