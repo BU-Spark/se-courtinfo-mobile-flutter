@@ -22,6 +22,7 @@ class AuthProvider extends ChangeNotifier {
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
   Token? _loginToken;
+  final storage = new FlutterSecureStorage();
 
   Status get loggedInStatus => _loggedInStatus;
 
@@ -39,7 +40,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> checkLoginStatus() async {
     // try to retrieve token if existed
-    final storage = new FlutterSecureStorage();
     String? storedToken = await storage.read(key: 'login_token');
     if (storedToken != null) {
       DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
@@ -131,7 +131,7 @@ class AuthProvider extends ChangeNotifier {
 
       _loggedInStatus = Status.LoggedIn;
       _loginToken = token; // Store the login token
-      await FlutterSecureStorage().write(
+      await storage.write(
         key: 'login_token',
         value: json.encode(token.toJson()),
       ); // Store the token securely
