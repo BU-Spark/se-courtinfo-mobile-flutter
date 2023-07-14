@@ -48,7 +48,7 @@ class AuthProvider extends ChangeNotifier {
       if (expirationDate.isAfter(DateTime.now())) { //still valid
         _loginToken = Token.fromJson(json.decode(storedToken));
         _loggedInStatus = Status.LoggedIn;
-        storedToken = null; 
+        await storage.delete(key: "login_token");
       } else { //token expired
         _loggedInStatus = Status.NotLoggedIn;
         await storage.delete(key: 'login_token');
