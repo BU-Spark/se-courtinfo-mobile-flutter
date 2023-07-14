@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../validator.dart';
-import 'package:email_validator/email_validator.dart';
 
 class loginSlider extends StatefulWidget {
   final double height;

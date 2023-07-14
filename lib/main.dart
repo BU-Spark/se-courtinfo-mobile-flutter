@@ -6,11 +6,15 @@ import 'package:flutter/src/painting/image_resolution.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final authProvider = AuthProvider();
+  await authProvider.checkLoginStatus();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
+         ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
       ],
       child: const MyApp(),
     ),
@@ -59,8 +63,6 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  // bool flag_signup = false;
-  // bool flag_login = false;
 
   @override
   Widget build(BuildContext context) {

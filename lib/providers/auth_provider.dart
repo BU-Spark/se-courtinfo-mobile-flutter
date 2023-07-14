@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../models/token.dart';
 import '../utility/app_url.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 enum Status {
   NotLoggedIn,
@@ -19,6 +21,8 @@ enum Status {
 class AuthProvider extends ChangeNotifier {
   Status _loggedInStatus = Status.NotLoggedIn;
   Status _registeredInStatus = Status.NotRegistered;
+  Token? _loginToken;
+  final storage = new FlutterSecureStorage();
 
   Status get loggedInStatus => _loggedInStatus;
 
@@ -30,6 +34,29 @@ class AuthProvider extends ChangeNotifier {
 
   set registeredInStatus(Status value) {
     _registeredInStatus = value;
+  }
+
+  Token? get loginToken => _loginToken;
+
+  Future<void> checkLoginStatus() async {
+    // try to retrieve token if existed
+    String? storedToken = await storage.read(key: 'login_token');
+    if (storedToken != null) {
+      DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
+      // print('expiration date: $expirationDate');
+      //check if the token is expired or not
+      if (expirationDate.isAfter(DateTime.now())) { //still valid
+        _loginToken = Token.fromJson(json.decode(storedToken));
+        _loggedInStatus = Status.LoggedIn;
+        await storage.delete(key: "login_token");
+      } else { //token expired
+        _loggedInStatus = Status.NotLoggedIn;
+        await storage.delete(key: 'login_token');
+      }
+    } else { //no login token found
+      _loggedInStatus = Status.NotLoggedIn;
+    }
+    notifyListeners();
   }
 
   Future<Map<String, dynamic>> signup(String email, String password,
@@ -55,7 +82,7 @@ class AuthProvider extends ChangeNotifier {
       // print('Response Body: ${response.body}');
 
       //create a token model
-      Token token= Token. fromJson(responseData);
+      Token token = Token.fromJson(responseData);
 
       notifyListeners();
       result = {
@@ -100,10 +127,15 @@ class AuthProvider extends ChangeNotifier {
       // print('Response Body: ${response.body}');
 
       //create a token model
-      Token token = Token. fromJson(responseData);
+      Token token = Token.fromJson(responseData);
 
       _loggedInStatus = Status.LoggedIn;
-      notifyListeners();
+      _loginToken = token; // Store the login token
+      await storage.write(
+        key: 'login_token',
+        value: json.encode(token.toJson()),
+      ); // Store the token securely
+      print('stored token_write:${json.encode(token.toJson())}');
       result = {
         'status': true,
         'message': 'Successfully logged in',
@@ -111,12 +143,12 @@ class AuthProvider extends ChangeNotifier {
       };
     } else {
       _loggedInStatus = Status.NotLoggedIn;
-      notifyListeners();
       result = {
         'status': false,
         'message': json.decode(response.body)['error'],
       };
     }
+    notifyListeners();
     return result;
   }
 
