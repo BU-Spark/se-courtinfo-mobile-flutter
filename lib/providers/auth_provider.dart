@@ -45,15 +45,18 @@ class AuthProvider extends ChangeNotifier {
       DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
       // print('expiration date: $expirationDate');
       //check if the token is expired or not
-      if (expirationDate.isAfter(DateTime.now())) { //still valid
+      if (expirationDate.isAfter(DateTime.now())) {
+        //still valid
         _loginToken = Token.fromJson(json.decode(storedToken));
         _loggedInStatus = Status.LoggedIn;
-        storedToken = null; 
-      } else { //token expired
+        await storage.delete(key: "login_token");
+      } else {
+        //token expired
         _loggedInStatus = Status.NotLoggedIn;
         await storage.delete(key: 'login_token');
       }
-    } else { //no login token found
+    } else {
+      //no login token found
       _loggedInStatus = Status.NotLoggedIn;
     }
     notifyListeners();
