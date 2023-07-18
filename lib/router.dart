@@ -1,5 +1,6 @@
 import 'package:courtinfo_spark/components/BottomNav.dart';
 import 'package:courtinfo_spark/screens/camera/CameraScreen.dart';
+import 'package:courtinfo_spark/screens/camera/scanDoc.dart';
 import 'package:courtinfo_spark/screens/home/HomeScreen.dart';
 import 'package:courtinfo_spark/screens/settings/SettingScreen.dart';
 import 'package:courtinfo_spark/screens/login/log_in.dart';
@@ -37,6 +38,12 @@ final goRouter = GoRouter(
       path: '/camera',
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const CameraScreen(),
+    ),
+    GoRoute(
+      name: 'scanDoc',
+      path: '/scanDoc',
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (context, state) => const ScanDoc(),
     ),
     GoRoute(
       name: 'login',
