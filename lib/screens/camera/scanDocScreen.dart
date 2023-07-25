@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import '../../utility/retake_dialog.dart';
 
 class ScanDocScreen extends StatefulWidget {
   final int minPageCount;
@@ -139,12 +140,12 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     ),
                     backgroundColor: Colors.white, // Background color
                   ),
-                  onPressed: onRetake,
+                  onPressed: _showRetakeConfirm,
                   child: const Text(
                     'Retake',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       height: 1.6699999173,
                       color: Color(0xff1f2c5c),
@@ -166,7 +167,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     'Add more pages',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       height: 1.6699999173,
                       color: Colors.white,
@@ -248,7 +249,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     );
   }
 
-  void onRetake() async {
+  void _onRetake() async {
     List<String> pictures;
     try {
       pictures = await CunningDocumentScanner.getPictures() ?? [];
@@ -261,10 +262,26 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     }
   }
 
+Future<void> _showRetakeConfirm() async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return RetakeDialog(
+          onRetake: () {
+            // Call the onRetake function to delete pictures and rescan documents
+            _onRetake();
+          },
+        );
+      },
+    );
+  }
   void _onDeletePicture(int index) {
     setState(() {
       _pictures.removeAt(index);
     });
+    if (_currentIndex >= _pictures.length) {
+        _currentIndex = _pictures.length - 1;
+      }
   }
 
   void _onNavigate(int step) {
