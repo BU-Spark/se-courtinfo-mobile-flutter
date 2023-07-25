@@ -1,6 +1,6 @@
 import 'package:courtinfo_spark/components/BottomNav.dart';
 import 'package:courtinfo_spark/screens/camera/CameraScreen.dart';
-import 'package:courtinfo_spark/screens/camera/scanDoc.dart';
+import 'package:courtinfo_spark/screens/camera/scanDocScreen.dart';
 import 'package:courtinfo_spark/screens/home/HomeScreen.dart';
 import 'package:courtinfo_spark/screens/settings/SettingScreen.dart';
 import 'package:courtinfo_spark/screens/login/log_in.dart';
@@ -40,10 +40,14 @@ final goRouter = GoRouter(
       builder: (context, state) => const CameraScreen(),
     ),
     GoRoute(
-      name: 'scanDoc',
-      path: '/scanDoc',
+      name: 'ScanDocScreen',
+      path: '/ScanDocScreen',
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const ScanDoc(),
+      pageBuilder: (context, state) {
+        final queryParams = state.queryParameters;
+        final minPageCount = int.tryParse(queryParams['minPageCount'] ?? '1') ?? 1;
+        return MaterialPage(child: ScanDocScreen(minPageCount: minPageCount));
+      },
     ),
     GoRoute(
       name: 'login',

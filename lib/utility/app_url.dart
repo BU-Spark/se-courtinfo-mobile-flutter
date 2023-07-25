@@ -1,5 +1,5 @@
 class AppUrl {
-  static const String baseUrl = 'http://localhost/api';
+  static const String baseUrl = 'http://192.168.4.41/api';
 
   static const String login = baseUrl + '/token';
   static const String register = baseUrl + '/signup';

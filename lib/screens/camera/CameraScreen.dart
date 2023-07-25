@@ -2,6 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+class DocumentObject {
+  final String name;
+  final String description;
+  final int minPageCount;
+  final bool variablePageCount;
+
+  DocumentObject({
+    required this.name,
+    required this.description,
+    required this.minPageCount,
+    required this.variablePageCount,
+  });
+}
+
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
 
@@ -10,7 +24,22 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreen extends State<CameraScreen> {
-  String dropdownValue = 'Bond Tracking Form';
+  List<DocumentObject> documents = [
+    DocumentObject(
+      name: "Bond Tracking Form",
+      description: "A bond tracking form for Fairfax county",
+      minPageCount: 3,
+      variablePageCount: false,
+    ),
+    DocumentObject(
+      name: "Criminal Complain Form",
+      description: "A form for criminal complaint",
+      minPageCount: 3,
+      variablePageCount: false,
+    ),
+  ]; // Initialize this list with objects from API
+
+  DocumentObject? selectedDocument;
 
   @override
   Widget build(BuildContext context) {
@@ -51,34 +80,37 @@ class _CameraScreen extends State<CameraScreen> {
               ),
             ),
             Container(
-              child: DropdownButton<String>(
-                value: dropdownValue,
-                onChanged: (String? newValue) {
+              child: DropdownButton<DocumentObject>(
+                value: selectedDocument,
+                onChanged: (DocumentObject? newValue) {
                   setState(() {
-                    dropdownValue = newValue!;
+                    selectedDocument = newValue;
                   });
                 },
-                // will replace the list by the actial forms objects retrieved by api cal /api/forms
-                items: <String>['Bond Tracking Form', 'Criminal Complain Form']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                items: documents.map((DocumentObject document) {
+                  return DropdownMenuItem<DocumentObject>(
+                    value: document,
+                    child: Text(document.name),
                   );
                 }).toList(),
               ),
             ),
             const SizedBox(
-                height: 20,
-              ),
+              height: 20,
+            ),
             Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: FloatingActionButton.extended(
-                          onPressed: () => {context.goNamed('scanDoc')},
-                          heroTag: 'camera_continue',
-                          label: const Text('Continue'),
-                          backgroundColor: const Color(0xff1f2c5c)),
-                    ),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: FloatingActionButton.extended(
+                  onPressed: () => {
+                    if (selectedDocument != null) {
+                    // pass the selectedDocument.minPageCount to the scanning page.
+                    context.goNamed('scanDocScreen', queryParameters: {'minPageCount': selectedDocument!.minPageCount.toString()}),
+                  }
+                  },
+                  heroTag: 'camera_continue',
+                  label: const Text('Continue'),
+                  backgroundColor: const Color(0xff1f2c5c)),
+            ),
           ],
         ),
       ),

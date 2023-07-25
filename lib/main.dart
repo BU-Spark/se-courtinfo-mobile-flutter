@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.fromLTRB(50, 60, 50, 70),
+        padding: const EdgeInsets.fromLTRB(50, 95, 50, 50),
         width: double.infinity,
         height: 896,
         decoration: const BoxDecoration(
@@ -123,7 +123,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     // Login button
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 33, 0),
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: FloatingActionButton.extended(
                           heroTag: 'login_tag',
                           onPressed: () => {context.goNamed('login')},
