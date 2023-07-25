@@ -111,9 +111,9 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                             padding: const EdgeInsets.all(2),
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 212, 22, 22),
                             ),
-                            child: const Icon(Icons.close, size: 16),
+                            child: const Icon(Icons.close, size: 16, color: Colors.white,),
                           ),
                         ),
                       ),
@@ -151,9 +151,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     ),
                   ),
                 ),
-
-                // Add More Pictures button (if available)
-                if (morePicAllowed) const SizedBox(width: 10),
+                const SizedBox(width: 10),
+                // Add More Pages button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
