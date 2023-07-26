@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import '../../utility/retake_dialog.dart';
+import '../../utility/picture_dialog.dart';
 
 class ScanDocScreen extends StatefulWidget {
   final int minPageCount;
@@ -43,16 +44,10 @@ class _ScanDocScreen extends State<ScanDocScreen> {
       // Handle exception here
     }
   }
-
-  bool _morePicAllowed() {
-    // check whether the user is able to take more pictures (page.length < minPageCount)
-    return _pictures.length < widget.minPageCount;
-  }
-
   int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    bool morePicAllowed = _morePicAllowed();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -64,20 +59,15 @@ class _ScanDocScreen extends State<ScanDocScreen> {
         ),
       ),
       body: Container(
-        padding: const EdgeInsets.fromLTRB(50, 20, 50, 50),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         width: double.infinity,
-        height: 896,
+        height: 920,
         decoration: const BoxDecoration(
           color: Color(0xffffffff),
         ),
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            Center(
-              child: Text(
-                  'Scanning Document - ${widget.minPageCount} pages required.'),
-            ),
-
+            const SizedBox(height: 50),
             GestureDetector(
               child: SizedBox(
                 height: 300,
@@ -93,7 +83,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     return Stack(children: [
                       GestureDetector(
                         onTap: () {
-                          // view a page in full-screen view
+                          _showFullScreenDialog(context,
+                              index); // view a page in full-screen view
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(1.0),
@@ -114,7 +105,11 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                               shape: BoxShape.circle,
                               color: Color.fromARGB(255, 212, 22, 22),
                             ),
-                            child: const Icon(Icons.close, size: 16, color: Colors.white,),
+                            child: const Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -123,7 +118,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                 ),
               ),
             ),
-
+            const SizedBox(height:10),
             // Retake button
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -141,15 +136,27 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     backgroundColor: Colors.white, // Background color
                   ),
                   onPressed: _showRetakeConfirm,
-                  child: const Text(
-                    'Retake',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      height: 1.6699999173,
-                      color: Color(0xff1f2c5c),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Retake',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          height: 1.6699999173,
+                          color: Color(0xff1f2c5c),
+                        ),
+                      ),
+                      SizedBox(width:5), // Adjust the spacing between the text and the icon
+                      Icon(
+                        Icons.photo_camera,
+                        color: Color(0xff1f2c5c),
+                        size: 20, // Adjust the size of the camera icon
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -159,37 +166,65 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50.0),
+                      side: const BorderSide(
+                        color: Color(0xff1f2c5c),
+                        width: 2.0,
+                      ),
                     ),
-                    backgroundColor: const Color(0xff1f2c5c),
+                    backgroundColor: Colors.white, // Background color
                   ),
                   onPressed: _addMorePicture,
-                  child: const Text(
-                    'Add more pages',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      height: 1.6699999173,
-                      color: Colors.white,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Add More Pages',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          height: 1.6699999173,
+                          color: Color(0xff1f2c5c),
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        '+',
+                        style: TextStyle(
+                          color: Color(0xff1f2c5c),
+                          fontSize: 28,
+                          fontWeight:
+                              FontWeight.bold, // Set the font weight to bold
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF1F2C5C),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
+                SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF1F2C5C),
                     ),
-                    onPressed: () => _onNavigate(-1),
+                    child: Center(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        onPressed: () => _onNavigate(-1),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -204,43 +239,61 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFF1F2C5C),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
+                SizedBox(
+                  width: 28,
+                  height: 28,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF1F2C5C),
                     ),
-                    onPressed: () => _onNavigate(1),
+                    child: Center(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        onPressed: () => _onNavigate(1),
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 100),
 
             // Submit button
-            if (!morePicAllowed)
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  backgroundColor: const Color(0xff1f2c5c),
-                ),
-                onPressed: _onSubmit,
-                child: const Text(
-                  'Submit',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    height: 1.6699999173,
-                    color: Colors.white,
-                  ),
+              Container(
+                alignment: Alignment.bottomRight,
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        backgroundColor: const Color(0xff1f2c5c),
+                      ),
+                      onPressed: _onSubmit,
+                      child: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Text(
+                      'Submit',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        height: 1.6699999173,
+                        color: Color(0xff1f2c5c),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
@@ -262,7 +315,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     }
   }
 
-Future<void> _showRetakeConfirm() async {
+  Future<void> _showRetakeConfirm() async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -275,13 +328,23 @@ Future<void> _showRetakeConfirm() async {
       },
     );
   }
+
+  void _showFullScreenDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return FullScreenDialog(imageFile: File(_pictures[index]));
+      },
+    );
+  }
+
   void _onDeletePicture(int index) {
     setState(() {
       _pictures.removeAt(index);
     });
     if (_currentIndex >= _pictures.length) {
-        _currentIndex = _pictures.length - 1;
-      }
+      _currentIndex = _pictures.length - 1;
+    }
   }
 
   void _onNavigate(int step) {
@@ -321,7 +384,7 @@ Future<void> _showRetakeConfirm() async {
       final snackBar = SnackBar(
         content: Text(
           'You need to scan exactly ${widget.minPageCount} pages.',
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
       );
