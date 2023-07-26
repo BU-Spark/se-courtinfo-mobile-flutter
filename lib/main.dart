@@ -126,7 +126,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: FloatingActionButton.extended(
                           heroTag: 'login_tag',
-                          onPressed: () => {context.goNamed('camera')}, //just for test, change back to "login" later on
+                          onPressed: () => {context.goNamed('login')}, //just for test, change back to "login" later on
                           label: const Text('Log in'),
                           backgroundColor: const Color(0xff1f2c5c)),
                     ),
