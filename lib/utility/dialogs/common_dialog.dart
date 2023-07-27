@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 
-class RetakeDialog extends StatefulWidget {
-  final VoidCallback onRetake;
+class CommonDialog extends StatefulWidget {
+  final String title;
+  final String actionText;
+  final VoidCallback onAction;
 
-  const RetakeDialog({required this.onRetake});
+  CommonDialog({
+    required this.title,
+    required this.actionText,
+    required this.onAction,
+  });
 
   @override
-  _RetakeDialogState createState() => _RetakeDialogState();
+  _CommonDialogState createState() => _CommonDialogState();
 }
 
-class _RetakeDialogState extends State<RetakeDialog> {
+class _CommonDialogState extends State<CommonDialog> {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 180, 20, 180),
         child: AlertDialog(
-          title: const Center(child: Text('Clean all photos')),
+          title: Center(child: Text(widget.title)),
           content: const Text('Do you want to clean all the shooting records?'),
           actions: [
             Center(
@@ -30,12 +36,12 @@ class _RetakeDialogState extends State<RetakeDialog> {
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  widget.onRetake(); // Call the onRetake callback
+                  widget.onAction(); // Call the onAction callback
                 },
-                child: const Text(
-                  'Retake',
+                child: Text(
+                  widget.actionText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     height: 1.6699999173,

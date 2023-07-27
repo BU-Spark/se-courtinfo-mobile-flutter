@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
-import '../../utility/retake_dialog.dart';
-import '../../utility/picture_dialog.dart';
+import '../../utility/dialogs/common_dialog.dart';
+import '../../utility/dialogs/picture_dialog.dart';
+
 
 class ScanDocScreen extends StatefulWidget {
   final int minPageCount;
@@ -55,7 +56,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
         iconTheme: const IconThemeData(color: Color(0xff1f2c5c)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.goNamed('home'),
+          onPressed:() => _showActionConfirm('home'),
         ),
       ),
       body: Container(
@@ -72,6 +73,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
               child: SizedBox(
                 height: 300,
                 child: PageView.builder(
+                  // View scanned documents
                   controller: _pageController,
                   itemCount: _pictures.length,
                   onPageChanged: (index) {
@@ -84,7 +86,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                       GestureDetector(
                         onTap: () {
                           _showFullScreenDialog(context,
-                              index); // view a page in full-screen view
+                              index); // View a page in full-screen view
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(1.0),
@@ -98,6 +100,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                         top: 0,
                         right: 0,
                         child: GestureDetector(
+                          // Delete a certain page
                           onTap: () => _onDeletePicture(index),
                           child: Container(
                             padding: const EdgeInsets.all(2),
@@ -118,12 +121,12 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                 ),
               ),
             ),
-            const SizedBox(height:10),
-            // Retake button
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
+                  // Retake button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -133,9 +136,9 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                         width: 2.0,
                       ),
                     ),
-                    backgroundColor: Colors.white, // Background color
+                    backgroundColor: Colors.white,
                   ),
-                  onPressed: _showRetakeConfirm,
+                  onPressed: () => _showActionConfirm('retake'),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -150,18 +153,18 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                           color: Color(0xff1f2c5c),
                         ),
                       ),
-                      SizedBox(width:5), // Adjust the spacing between the text and the icon
+                      SizedBox(width: 5),
                       Icon(
                         Icons.photo_camera,
                         color: Color(0xff1f2c5c),
-                        size: 20, // Adjust the size of the camera icon
+                        size: 20,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 10),
-                // Add More Pages button
                 ElevatedButton(
+                  // Add More Pages button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -171,7 +174,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                         width: 2.0,
                       ),
                     ),
-                    backgroundColor: Colors.white, // Background color
+                    backgroundColor: Colors.white,
                   ),
                   onPressed: _addMorePicture,
                   child: Row(
@@ -194,8 +197,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                         style: TextStyle(
                           color: Color(0xff1f2c5c),
                           fontSize: 28,
-                          fontWeight:
-                              FontWeight.bold, // Set the font weight to bold
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -205,6 +207,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
             ),
             const SizedBox(height: 30),
             Row(
+              // Last page & next page buttons, pagination
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -263,39 +266,38 @@ class _ScanDocScreen extends State<ScanDocScreen> {
             ),
             const SizedBox(height: 100),
 
-            // Submit button
-              Container(
-                alignment: Alignment.bottomRight,
-                margin: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                        backgroundColor: const Color(0xff1f2c5c),
+            Container( // Submit button
+              alignment: Alignment.bottomRight,
+              margin: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
                       ),
-                      onPressed: _onSubmit,
-                      child: const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
+                      backgroundColor: const Color(0xff1f2c5c),
                     ),
-                    const Text(
-                      'Submit',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        height: 1.6699999173,
-                        color: Color(0xff1f2c5c),
-                      ),
+                    onPressed: _onSubmit,
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                  const Text(
+                    'Submit',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      height: 1.6699999173,
+                      color: Color(0xff1f2c5c),
+                    ),
+                  ),
+                ],
               ),
+            ),
           ],
         ),
       ),
@@ -315,16 +317,28 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     }
   }
 
-  Future<void> _showRetakeConfirm() async {
+Future<void> _showActionConfirm(String action) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return RetakeDialog(
-          onRetake: () {
-            // Call the onRetake function to delete pictures and rescan documents
-            _onRetake();
-          },
+        if (action == 'retake'){ // trigger the Retake dialog
+          return CommonDialog (
+            title: 'Retake all documents',
+            actionText: 'Retake',
+            onAction: () { // Call the onRetake function to delete pictures and rescan documents
+              _onRetake();
+            },
         );
+        }
+        else { // trigger the home dialog
+          return CommonDialog(
+            title: 'Go back to the home page',
+            actionText: 'Home',
+            onAction: () {
+              context.goNamed('home');
+            },
+        );
+        }
       },
     );
   }
@@ -338,6 +352,19 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     );
   }
 
+  void _addMorePicture() async {
+    List<String> pictures;
+    try {
+      pictures = await CunningDocumentScanner.getPictures() ?? [];
+      if (!mounted) return;
+      setState(() {
+        _pictures.addAll(pictures);
+      });
+    } catch (exception) {
+      // Handle exception here
+    }
+  }
+  
   void _onDeletePicture(int index) {
     setState(() {
       _pictures.removeAt(index);
@@ -361,20 +388,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     }
   }
 
-  void _addMorePicture() async {
-    List<String> pictures;
-    try {
-      pictures = await CunningDocumentScanner.getPictures() ?? [];
-      if (!mounted) return;
-      setState(() {
-        _pictures.addAll(pictures);
-      });
-    } catch (exception) {
-      // Handle exception here
-    }
-  }
-
-  void _onSubmit() async {
+  void _onSubmit() async { // Check whether the user has scanned the required num of pages before submitting.
     if (_pictures.length == widget.minPageCount) {
       // implement API post
       // loading page
