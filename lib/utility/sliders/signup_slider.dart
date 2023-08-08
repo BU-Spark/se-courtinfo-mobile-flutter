@@ -38,7 +38,7 @@ class _SlidersState extends State<regSlider> {
     return Align(
       alignment: const Alignment(0, 0),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(60, 39, 60, 39),
+        padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
         width: double.infinity,
         height: 896,
         child: Container(
