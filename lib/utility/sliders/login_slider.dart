@@ -38,12 +38,12 @@ class _SlidersState extends State<loginSlider> {
     return Align(
       alignment: const Alignment(0, 0),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(60, 39, 60, 39),
+        padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
         width: double.infinity,
-        height: 896,
+        height: 850,
         child: Container(
           width: double.infinity,
-          height: 480.23,
+          height: 450,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
