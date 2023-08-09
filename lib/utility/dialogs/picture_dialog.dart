@@ -26,8 +26,7 @@ class FullScreenDialog extends StatelessWidget {
                 top: 2,
                 right: 2,
                 child: GestureDetector(
-                  onTap: () {
-                    // When tapping on the circular button, close the dialog and go back to ScanDocScreen
+                  onTap: () { // When clicking on the close button, close the dialog and go back to ScanDocScreen
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -35,7 +34,7 @@ class FullScreenDialog extends StatelessWidget {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color:
-                          Colors.red, // Set the button background color to red
+                          Colors.red, 
                     ),
                     child: const Icon(
                       Icons.close,

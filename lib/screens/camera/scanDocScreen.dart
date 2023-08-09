@@ -31,9 +31,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     super.dispose();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    // Initialize the camera view
+  Future<void> initPlatformState() async { // Initialize the camera view
     List<String> pictures;
     try {
       pictures = await CunningDocumentScanner.getPictures() ?? [];
@@ -42,7 +40,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
         _pictures = pictures;
       });
     } catch (exception) {
-      // Handle exception here
+      print('Exception occurred: $exception');
     }
   }
   int _currentIndex = 0;
@@ -99,8 +97,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: GestureDetector(
-                          // Delete a certain page
+                        child: GestureDetector(// Delete the selected photo
                           onTap: () => _onDeletePicture(index),
                           child: Container(
                             padding: const EdgeInsets.all(2),
@@ -125,8 +122,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  // Retake button
+                ElevatedButton( // "Retake" button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -163,8 +159,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                ElevatedButton(
-                  // Add More Pages button
+                ElevatedButton( //"Add More Pages" button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -206,8 +201,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
               ],
             ),
             const SizedBox(height: 30),
-            Row(
-              // Last page & next page buttons, pagination
+            Row( // Last page & next page buttons, pagination
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -265,7 +259,6 @@ class _ScanDocScreen extends State<ScanDocScreen> {
               ],
             ),
             const SizedBox(height: 100),
-
             Container( // Submit button
               alignment: Alignment.bottomRight,
               margin: const EdgeInsets.all(15),
@@ -313,15 +306,15 @@ class _ScanDocScreen extends State<ScanDocScreen> {
         _pictures = pictures;
       });
     } catch (exception) {
-      // Handle exception here
+      print('Exception occurred: $exception');
     }
   }
 
-Future<void> _showActionConfirm(String action) async {
+Future<void> _showActionConfirm(String action) async { // Trigger the dialog
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        if (action == 'retake'){ // trigger the Retake dialog
+        if (action == 'retake'){ // Retake dialog
           return CommonDialog (
             title: 'Retake all documents',
             actionText: 'Retake',
@@ -330,7 +323,7 @@ Future<void> _showActionConfirm(String action) async {
             },
         );
         }
-        else { // trigger the home dialog
+        else { // Home dialog
           return CommonDialog(
             title: 'Go back to the home page',
             actionText: 'Home',
@@ -343,7 +336,7 @@ Future<void> _showActionConfirm(String action) async {
     );
   }
 
-  void _showFullScreenDialog(BuildContext context, int index) {
+  void _showFullScreenDialog(BuildContext context, int index) { // View selected photo in full screen
     showDialog(
       context: context,
       builder: (context) {
@@ -361,7 +354,7 @@ Future<void> _showActionConfirm(String action) async {
         _pictures.addAll(pictures);
       });
     } catch (exception) {
-      // Handle exception here
+      print('Exception occurred: $exception');
     }
   }
   
@@ -374,7 +367,7 @@ Future<void> _showActionConfirm(String action) async {
     }
   }
 
-  void _onNavigate(int step) {
+  void _onNavigate(int step) { // Page Navigation
     int newIndex = _currentIndex + step;
     if (newIndex >= 0 && newIndex < _pictures.length) {
       setState(() {
@@ -388,13 +381,10 @@ Future<void> _showActionConfirm(String action) async {
     }
   }
 
-  void _onSubmit() async { // Check whether the user has scanned the required num of pages before submitting.
-    if (_pictures.length == widget.minPageCount) {
-      // implement API post
-      // loading page
+  void _onSubmit() async { // Check whether the user has scanned the required num of pages before submission.
+    if (_pictures.length == widget.minPageCount) { // need to add /upload API later on
       context.goNamed('home');
-    } else {
-      // error message shown: need more pic
+    } else { // error message shown: need more pic
       final snackBar = SnackBar(
         content: Text(
           'You need to scan exactly ${widget.minPageCount} pages.',

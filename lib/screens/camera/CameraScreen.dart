@@ -37,7 +37,7 @@ class _CameraScreen extends State<CameraScreen> {
       minPageCount: 3,
       variablePageCount: false,
     ),
-  ]; // Initialize this list with objects from API
+  ]; // Initialize this list with objects from API, will replace with after getting the real API
 
   DocumentObject? selectedDocument;
 

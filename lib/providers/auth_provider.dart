@@ -43,13 +43,11 @@ class AuthProvider extends ChangeNotifier {
     String? storedToken = await storage.read(key: 'login_token');
     if (storedToken != null) {
       DateTime expirationDate = JwtDecoder.getExpirationDate(storedToken);
-      // print('expiration date: $expirationDate');
       //check if the token is expired or not
       if (expirationDate.isAfter(DateTime.now())) {
         //still valid
         _loginToken = Token.fromJson(json.decode(storedToken));
         _loggedInStatus = Status.LoggedIn;
-        await storage.delete(key: "login_token");
       } else {
         //token expired
         _loggedInStatus = Status.NotLoggedIn;
@@ -81,9 +79,6 @@ class AuthProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      // print('Response Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.body}');
-
       //create a token model
       Token token = Token.fromJson(responseData);
 
@@ -126,9 +121,6 @@ class AuthProvider extends ChangeNotifier {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      // print('Response Status Code: ${response.statusCode}');
-      // print('Response Body: ${response.body}');
-
       //create a token model
       Token token = Token.fromJson(responseData);
 
