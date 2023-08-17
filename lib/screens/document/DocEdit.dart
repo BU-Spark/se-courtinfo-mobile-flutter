@@ -46,22 +46,24 @@ class _DocEdit extends State<DocEdit> {
   final TextEditingController dobController = TextEditingController();
   final TextEditingController chargeController = TextEditingController();
 
-  String selectRace = 'White';
-  String selectSex = 'Male';
-  String selectRecommendation = 'Detain';
-  String selectPrimaryChargeCategory = 'Violent Felony/Firearm';
-  String selectRiskLevel = '1';
+  String selectRace = 'Select an option';
+  String selectSex = 'Select an option';
+  String selectRecommendation = 'Select an option';
+  String selectPrimaryChargeCategory = 'Select an option';
+  String selectRiskLevel = 'Select an option';
   String selectConsistency =
-      'The recommendation is consistent with the Praxis.';
+      'Select an option';
 
-  List<String> raceOptions = ['White', 'Black', 'Asian', 'Other', 'Unknown'];
-  List<String> sexOptions = ['Male', 'Female'];
+  List<String> raceOptions = ['Select an option', 'White', 'Black', 'Asian', 'Other', 'Unknown'];
+  List<String> sexOptions = ['Select an option', 'Male', 'Female'];
   List<String> recOptions = [
+    'Select an option',
     'Detain',
     'Release with Supervision',
     'Release without Supervision'
   ];
   List<String> categoryOptions = [
+    'Select an option',
     'Violent Felony/Firearm',
     'Violent Misdemeanor',
     'Non-violent Felony',
@@ -72,8 +74,9 @@ class _DocEdit extends State<DocEdit> {
     'FTA: Driving under the Influence',
     'FTA: Non-Violent Misdemeanor'
   ];
-  List<String> levelOptions = ['1', '2', '3', '4', '5', '6'];
+  List<String> levelOptions = ['Select an option', '1', '2', '3', '4', '5', '6'];
   List<String> consistencyOptions = [
+    'Select an option',
     'The recommendation is consistent with the Praxis.',
     'The recommendation is not consistent with the Praxis.'
   ];
@@ -127,6 +130,7 @@ class _DocEdit extends State<DocEdit> {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.fromLTRB(1, 1, 1, 1),
                 width: double.infinity,
                 height: 457,
                 child: Stack(
@@ -157,7 +161,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 40,
+                      top: 45,
                       child: Text(
                         'SSN:',
                         style: TextStyle(
@@ -168,7 +172,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       right: 15,
-                      top: 40,
+                      top: 45,
                       child: SizedBox(
                         width: 200,
                         height: 21,
@@ -181,7 +185,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 80,
+                      top: 90,
                       child: Text(
                         'Zip:',
                         style: TextStyle(
@@ -192,7 +196,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       right: 15,
-                      top: 80,
+                      top: 90,
                       child: SizedBox(
                         width: 200,
                         height: 21,
@@ -205,7 +209,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 120,
+                      top: 135,
                       child: Text(
                         'Race:',
                         style: TextStyle(
@@ -216,7 +220,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       right: 15,
-                      top: 116,
+                      top: 131,
                       child: SizedBox(
                           width: 200,
                           height: 40,
@@ -237,7 +241,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 160,
+                      top: 180,
                       child: Text(
                         'Sex:',
                         style: TextStyle(
@@ -248,7 +252,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       right: 15,
-                      top: 156,
+                      top: 176,
                       child: SizedBox(
                           width: 200,
                           height: 40,
@@ -269,7 +273,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 200,
+                      top: 225,
                       child: Text(
                         'DOB:',
                         style: TextStyle(
@@ -280,7 +284,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 110,
-                      top: 200,
+                      top: 220,
                       child: SizedBox(
                         width: 52,
                         height: 40,
@@ -321,7 +325,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 240,
+                      top: 270,
                       child: Text(
                         'Recommendation:',
                         style: TextStyle(
@@ -332,28 +336,31 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 255,
+                      top: 290,
                       child: SizedBox(
-                          width: 200,
+                          width: 240,
                           height: 40,
-                          child: DropdownButton<String>(
-                            value: selectRecommendation,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectRecommendation = newValue!;
-                              });
-                            },
-                            items: recOptions.map((String rec) {
-                              return DropdownMenuItem<String>(
-                                value: rec,
-                                child: Text(rec),
-                              );
-                            }).toList(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: DropdownButton<String>(
+                              value: selectRecommendation,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectRecommendation = newValue!;
+                                });
+                              },
+                              items: recOptions.map((String rec) {
+                                return DropdownMenuItem<String>(
+                                  value: rec,
+                                  child: Text(rec, overflow: TextOverflow.ellipsis,),
+                                );
+                              }).toList(),
+                            ),
                           )),
                     ),
                     Positioned(
                       left: 15,
-                      top: 300,
+                      top: 330,
                       child: Text(
                         'Primary Charge Category:',
                         style: TextStyle(
@@ -364,7 +371,7 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 15,
-                      top: 315,
+                      top: 350,
                       child: SizedBox(
                           width: 200,
                           height: 40,
@@ -378,14 +385,15 @@ class _DocEdit extends State<DocEdit> {
                             items: categoryOptions.map((String category) {
                               return DropdownMenuItem<String>(
                                 value: category,
-                                child: Text(category),
+                                child: Text(category, overflow: TextOverflow.ellipsis,
+                                 maxLines: 3,),
                               );
                             }).toList(),
                           )),
                     ),
                     Positioned(
                       left: 15,
-                      top: 360,
+                      top: 390,
                       child: Text(
                         'Risk Level:',
                         style: TextStyle(
@@ -395,10 +403,10 @@ class _DocEdit extends State<DocEdit> {
                       ),
                     ),
                     Positioned(
-                      right: 15,
-                      top: 356,
+                      left: 128,
+                      top: 384,
                       child: SizedBox(
-                          width: 200,
+                          width: 147,
                           height: 40,
                           child: DropdownButton<String>(
                             value: selectRiskLevel,
@@ -417,9 +425,9 @@ class _DocEdit extends State<DocEdit> {
                     ),
                     Positioned(
                       left: 14,
-                      top: 400,
+                      top: 415,
                       child: SizedBox(
-                          width: 380,
+                          width: 330,
                           height: 40,
                           child: DropdownButton<String>(
                             value: selectConsistency,
@@ -431,7 +439,8 @@ class _DocEdit extends State<DocEdit> {
                             items: consistencyOptions.map((String consist) {
                               return DropdownMenuItem<String>(
                                 value: consist,
-                                child: Text(consist),
+                                child: Text(consist, overflow: TextOverflow.ellipsis,
+                                 maxLines: 2,),
                               );
                             }).toList(),
                           )),
@@ -439,10 +448,66 @@ class _DocEdit extends State<DocEdit> {
                   ],
                 ),
               ),
+              Container( // Submit button
+              alignment: Alignment.bottomRight,
+              margin: const EdgeInsets.all(6),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50.0),
+                      ),
+                      backgroundColor: const Color(0xff1f2c5c),
+                    ),
+                    onPressed: _onSubmit,
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Text(
+                    'Submit',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      height: 1.6699999173,
+                      color: Color(0xff1f2c5c),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onSubmit() async { 
+    if (nameController.text.isNotEmpty &&
+      ssnController.text.isNotEmpty &&
+      zipController.text.isNotEmpty &&
+      dobController.text.isNotEmpty &&
+      selectRace != 'Select an option' &&
+      selectSex != 'Select an option' &&
+      selectRecommendation != 'Select an option' &&
+      selectPrimaryChargeCategory != 'Select an option' &&
+      selectRiskLevel != 'Select an option' &&
+      selectConsistency != 'Select an option') { 
+      context.goNamed('home');
+    } else { 
+      final snackBar = SnackBar(
+        content: Text(
+          'Please fill in all the fields.',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
