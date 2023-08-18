@@ -383,7 +383,7 @@ Future<void> _showActionConfirm(String action) async { // Trigger the dialog
 
   void _onSubmit() async { // Check whether the user has scanned the required num of pages before submission.
     if (_pictures.length == widget.minPageCount) { // need to add /upload API later on
-      context.goNamed('home');
+      context.goNamed('docEdit');
     } else { // error message shown: need more pic
       final snackBar = SnackBar(
         content: Text(
