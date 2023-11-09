@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import '../../models/upload.dart';
+import '../../providers/upload_provider.dart';
 import '../../utility/dialogs/common_dialog.dart';
 import '../../utility/dialogs/picture_dialog.dart';
+import 'package:provider/provider.dart';
 
 
 class ScanDocScreen extends StatefulWidget {
@@ -47,6 +50,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final uploadProvider = Provider.of<UploadProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -272,7 +276,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                       ),
                       backgroundColor: const Color(0xff1f2c5c),
                     ),
-                    onPressed: _onSubmit,
+                    onPressed: () => _onSubmit(uploadProvider),
                     child: const Icon(
                       Icons.arrow_forward,
                       color: Colors.white,
@@ -381,9 +385,10 @@ Future<void> _showActionConfirm(String action) async { // Trigger the dialog
     }
   }
 
-  void _onSubmit() async { // Check whether the user has scanned the required num of pages before submission.
+  Future<void> _onSubmit(UploadProvider uploadProvider) async { // Check whether the user has scanned the required num of pages before submission.
     if (_pictures.length == widget.minPageCount) { // need to add /upload API later on
-      context.goNamed('docEdit');
+      uploadProvider.uploadFiles(_pictures);
+      // context.goNamed('docEdit');
     } else { // error message shown: need more pic
       final snackBar = SnackBar(
         content: Text(

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'package:provider/provider.dart';
 import '../../utility/textField.dart';
@@ -289,20 +288,20 @@ class _DocEdit extends State<DocEdit> {
                             children: [
                               TextButton(
                                 onPressed: () async {
-                                  DatePicker.showDatePicker(
-                                    context,
-                                    showTitleActions: true,
-                                    minTime: DateTime(1900),
-                                    maxTime: DateTime.now(),
-                                    onConfirm: (date) {
-                                      setState(() {
-                                        final formattedDate =
-                                            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-                                        dobController.text = formattedDate;
-                                      });
-                                    },
-                                    currentTime: DateTime.now(),
+                                  final selectedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime.now(),
                                   );
+
+                                  if (selectedDate != null) {
+                                    setState(() {
+                                      final formattedDate =
+                                          '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
+                                      dobController.text = formattedDate;
+                                    });
+                                  }
                                 },
                                 child: Text(
                                   dobController.text.isEmpty

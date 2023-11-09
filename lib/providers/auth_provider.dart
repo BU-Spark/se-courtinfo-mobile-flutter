@@ -111,7 +111,9 @@ class AuthProvider extends ChangeNotifier {
 
     Uri loginUri = Uri.parse(AppUrl.login);
 
-    http.Response response = await http.post(
+    // http.Response response = await http.post(
+
+    final response = await http.post(
       loginUri,
       body: loginData,
       headers: {
@@ -119,23 +121,27 @@ class AuthProvider extends ChangeNotifier {
       },
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      //create a token model
-      Token token = Token.fromJson(responseData);
+    print('response: $response');
 
-      _loggedInStatus = Status.LoggedIn;
-      _loginToken = token; // Store the login token
-      await storage.write(
-        key: 'login_token',
-        value: json.encode(token.toJson()),
-      ); // Store the token securely
-      print('stored token_write:${json.encode(token.toJson())}');
-      result = {
-        'status': true,
-        'message': 'Successfully logged in',
-        'data': token,
-      };
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        print('response data:$responseData');
+        //create a token model
+        Token token = Token.fromJson(responseData);
+        _loggedInStatus = Status.LoggedIn;
+        _loginToken = token; // Store the login token
+        await storage.write(
+          key: 'login_token',
+          value: json.encode(token.toJson()),
+        ); // Store the token securely
+        print('stored token_write:${json.encode(token.toJson())}');
+        result = {
+          'status': true,
+          'message': 'Successfully logged in',
+          'data': token,
+        };
+      }
     } else {
       _loggedInStatus = Status.NotLoggedIn;
       result = {

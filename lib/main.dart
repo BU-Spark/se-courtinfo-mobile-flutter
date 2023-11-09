@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.fromLTRB(50, 95, 50, 50),
+        padding: const EdgeInsets.fromLTRB(50, 95, 50, 0),
         width: double.infinity,
         height: 896,
         decoration: const BoxDecoration(
@@ -128,6 +128,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           heroTag: 'login_tag',
                           onPressed: () => {context.goNamed('login')}, 
                           label: const Text('Log in'),
+                          backgroundColor: const Color(0xff1f2c5c)),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: FloatingActionButton.extended(
+                          heroTag: 'main_tag',
+                          onPressed: () => {context.goNamed('home')}, 
+                          label: const Text('Home'),
                           backgroundColor: const Color(0xff1f2c5c)),
                     ),
                   ],

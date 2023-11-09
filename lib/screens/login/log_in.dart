@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
     try {
       var success = await authProvider.login(email, password);
       bool isSuccess = success['status'];
-
+      print('isSuccess? $isSuccess');
       if (isSuccess) {
         print("Successful login");
         return true;
