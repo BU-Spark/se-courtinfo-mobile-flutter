@@ -1,13 +1,13 @@
 import 'dart:io';
+import 'package:courtinfo_spark/screens/scan/uploadProcess.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
-import '../../models/upload.dart';
 import '../../providers/upload_provider.dart';
 import '../../utility/dialogs/common_dialog.dart';
 import '../../utility/dialogs/picture_dialog.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:developer';
 
 class ScanDocScreen extends StatefulWidget {
   final int minPageCount;
@@ -34,7 +34,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     super.dispose();
   }
 
-  Future<void> initPlatformState() async { // Initialize the camera view
+  Future<void> initPlatformState() async {
+    // Initialize the camera view
     List<String> pictures;
     try {
       pictures = await CunningDocumentScanner.getPictures() ?? [];
@@ -46,6 +47,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
       print('Exception occurred: $exception');
     }
   }
+
   int _currentIndex = 0;
 
   @override
@@ -58,7 +60,7 @@ class _ScanDocScreen extends State<ScanDocScreen> {
         iconTheme: const IconThemeData(color: Color(0xff1f2c5c)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed:() => _showActionConfirm('home'),
+          onPressed: () => _showActionConfirm('home'),
         ),
       ),
       body: Container(
@@ -101,7 +103,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: GestureDetector(// Delete the selected photo
+                        child: GestureDetector(
+                          // Delete the selected photo
                           onTap: () => _onDeletePicture(index),
                           child: Container(
                             padding: const EdgeInsets.all(2),
@@ -126,7 +129,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton( // "Retake" button
+                ElevatedButton(
+                  // "Retake" button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -163,7 +167,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                ElevatedButton( //"Add More Pages" button
+                ElevatedButton(
+                  //"Add More Pages" button
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -205,7 +210,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
               ],
             ),
             const SizedBox(height: 30),
-            Row( // Last page & next page buttons, pagination
+            Row(
+              // Last page & next page buttons, pagination
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -263,7 +269,8 @@ class _ScanDocScreen extends State<ScanDocScreen> {
               ],
             ),
             const SizedBox(height: 100),
-            Container( // Submit button
+            Container(
+              // Submit button
               alignment: Alignment.bottomRight,
               margin: const EdgeInsets.all(15),
               child: Column(
@@ -314,33 +321,37 @@ class _ScanDocScreen extends State<ScanDocScreen> {
     }
   }
 
-Future<void> _showActionConfirm(String action) async { // Trigger the dialog
+  Future<void> _showActionConfirm(String action) async {
+    // Trigger the dialog
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        if (action == 'retake'){ // Retake dialog
-          return CommonDialog (
+        if (action == 'retake') {
+          // Retake dialog
+          return CommonDialog(
             title: 'Retake all documents',
             actionText: 'Retake',
-            onAction: () { // Call the onRetake function to delete pictures and rescan documents
+            onAction: () {
+              // Call the onRetake function to delete pictures and rescan documents
               _onRetake();
             },
-        );
-        }
-        else { // Home dialog
+          );
+        } else {
+          // Home dialog
           return CommonDialog(
             title: 'Go back to the home page',
             actionText: 'Home',
             onAction: () {
               context.goNamed('home');
             },
-        );
+          );
         }
       },
     );
   }
 
-  void _showFullScreenDialog(BuildContext context, int index) { // View selected photo in full screen
+  void _showFullScreenDialog(BuildContext context, int index) {
+    // View selected photo in full screen
     showDialog(
       context: context,
       builder: (context) {
@@ -361,7 +372,7 @@ Future<void> _showActionConfirm(String action) async { // Trigger the dialog
       print('Exception occurred: $exception');
     }
   }
-  
+
   void _onDeletePicture(int index) {
     setState(() {
       _pictures.removeAt(index);
@@ -371,7 +382,8 @@ Future<void> _showActionConfirm(String action) async { // Trigger the dialog
     }
   }
 
-  void _onNavigate(int step) { // Page Navigation
+  void _onNavigate(int step) {
+    // Page Navigation
     int newIndex = _currentIndex + step;
     if (newIndex >= 0 && newIndex < _pictures.length) {
       setState(() {
@@ -385,11 +397,17 @@ Future<void> _showActionConfirm(String action) async { // Trigger the dialog
     }
   }
 
-  Future<void> _onSubmit(UploadProvider uploadProvider) async { // Check whether the user has scanned the required num of pages before submission.
-    if (_pictures.length == widget.minPageCount) { // need to add /upload API later on
-      uploadProvider.uploadFiles(_pictures);
-      // context.goNamed('docEdit');
-    } else { // error message shown: need more pic
+  Future<void> _onSubmit(UploadProvider uploadProvider) async {
+    // Check whether the user has scanned the required num of pages before submission.
+    if (_pictures.length == widget.minPageCount) {
+      log('Pictures: $_pictures');
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UploadProcessPage(pictures: _pictures)),
+    );
+      // currentContext.goNamed('docEdit');
+    } else {
+      // error message shown: need more pic
       final snackBar = SnackBar(
         content: Text(
           'You need to scan exactly ${widget.minPageCount} pages.',

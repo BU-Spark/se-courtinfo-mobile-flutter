@@ -1,3 +1,5 @@
+import 'package:courtinfo_spark/models/upload.dart';
+
 import '../constants.dart';
 import '../router.dart';
 import 'package:flutter/material.dart';
@@ -5,16 +7,20 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/upload_provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   final authProvider = AuthProvider();
   await authProvider.checkLoginStatus();
 
+  final uploadProvider = UploadProvider();
+
   runApp(
     MultiProvider(
       providers: [
          ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+        ChangeNotifierProvider<UploadProvider>(create: (_) => uploadProvider),
       ],
       child: const MyApp(),
     ),

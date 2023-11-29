@@ -4,5 +4,5 @@ class AppUrl {
   static const String login = baseUrl + '/token';
   static const String register = baseUrl + '/signup';
   static const String forms = baseUrl + '/forms';
-  static const String upload = baseUrl + '/upload';
+  static const String upload = baseUrl + '/v1/uploads/upload';
 }

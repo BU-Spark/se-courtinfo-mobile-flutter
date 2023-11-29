@@ -1,6 +1,6 @@
 import 'package:courtinfo_spark/components/BottomNav.dart';
-import 'package:courtinfo_spark/screens/camera/CameraScreen.dart';
-import 'package:courtinfo_spark/screens/camera/scanDocScreen.dart';
+import 'package:courtinfo_spark/screens/scan/CameraScreen.dart';
+import 'package:courtinfo_spark/screens/scan/scanDocScreen.dart';
 import 'package:courtinfo_spark/screens/document/DocEdit.dart';
 import 'package:courtinfo_spark/screens/home/HomeScreen.dart';
 import 'package:courtinfo_spark/screens/settings/SettingScreen.dart';
