@@ -10,9 +10,11 @@ import 'package:provider/provider.dart';
 import 'dart:developer';
 
 class ScanDocScreen extends StatefulWidget {
+  final String name;
   final int minPageCount;
+  final int form_type;
 
-  const ScanDocScreen({required this.minPageCount});
+  const ScanDocScreen({required this.name, required this.minPageCount, required this.form_type});
 
   @override
   _ScanDocScreen createState() => _ScanDocScreen();
@@ -400,10 +402,12 @@ class _ScanDocScreen extends State<ScanDocScreen> {
   Future<void> _onSubmit(UploadProvider uploadProvider) async {
     // Check whether the user has scanned the required num of pages before submission.
     if (_pictures.length == widget.minPageCount) {
+      int formType = widget.form_type;
       log('Pictures: $_pictures');
+      log('form type: $formType');
       Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => UploadProcessPage(pictures: _pictures)),
+      MaterialPageRoute(builder: (context) => UploadProcessPage(name: widget.name, pictures: _pictures, form_type: formType)),
     );
       // currentContext.goNamed('docEdit');
     } else {

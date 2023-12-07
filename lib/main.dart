@@ -19,7 +19,7 @@ void main() async{
   runApp(
     MultiProvider(
       providers: [
-         ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
+        ChangeNotifierProvider<AuthProvider>(create: (_) => authProvider),
         ChangeNotifierProvider<UploadProvider>(create: (_) => uploadProvider),
       ],
       child: const MyApp(),
@@ -120,7 +120,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   children: [
                     //Sign up button
                     Container(
-                      margin: const EdgeInsets.fromLTRB(0, 0, 33, 0),
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: FloatingActionButton.extended(
                           onPressed: () => {context.goNamed('signup')},
                           heroTag: 'signup_tag',

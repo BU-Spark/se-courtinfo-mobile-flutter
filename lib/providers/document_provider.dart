@@ -6,7 +6,8 @@ import '../models/form.dart';
 import '../utility/app_url.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<FormObject>> fetchformumentsFromApi() async {
+
+Future<List<FormObject>> fetchDocInformation() async {
   final response = await http.get(Uri.parse(AppUrl.forms));
 
   if (response.statusCode == 200) {
@@ -16,8 +17,12 @@ Future<List<FormObject>> fetchformumentsFromApi() async {
       description: form['description'],
       minPageCount: form['min_page_count'],
       variablePageCount: form['variable_page_count'],
+      form_type: form['form_type'],
     )).toList();
   } else {
     throw Exception('Failed to load formuments');
   }
 }
+
+
+

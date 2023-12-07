@@ -46,8 +46,10 @@ final goRouter = GoRouter(
       parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) {
         final queryParams = state.queryParameters;
+        final name = queryParams['name'] ?? 'document';
         final minPageCount = int.tryParse(queryParams['minPageCount'] ?? '1') ?? 1;
-        return MaterialPage(child: ScanDocScreen(minPageCount: minPageCount));
+        final formType = int.tryParse(queryParams['form_type'] ?? '1') ?? 1;
+        return MaterialPage(child: ScanDocScreen(name: name, minPageCount: minPageCount, form_type: formType));
       },
     ),
     GoRoute(

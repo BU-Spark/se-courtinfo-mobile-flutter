@@ -43,6 +43,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   cunning_document_scanner: ^1.1.2
   go_router: ^7.0.1
+  intl: ^0.18.1
   # permission_handler_apple: ^9.0.0
 
 dev_dependencies:
