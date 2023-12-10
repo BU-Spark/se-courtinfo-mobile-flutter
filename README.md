@@ -14,18 +14,21 @@ This is a Flutter project for a mobile application that allows users in Fairfax 
 
 ## Installation
 To run this app on your local machine, you'll need to have Flutter installed. Once you have Flutter installed, you can clone this repository by running the following command: 
-- gh repo clone BU-Spark/se-courtinfo-mobile-flutter
+```
+gh repo clone BU-Spark/se-courtinfo-mobile-flutter
+```
 
 
 Next, navigate to the project directory and run the following command to install the required dependencies:
-
-- flutter pub get
-
+```
+flutter pub get
+```
 
 ## Usage
 
 To run the app, use the following command in the project directory: 
-- flutter run
-
+```
+flutter run
+```
 
 The app will launch on your device or emulator. From there, you can sign up/login to your account, view scanned documents, and upload documents.
